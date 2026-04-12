@@ -4,7 +4,7 @@ import { InstancedMesh2 } from "../InstancedMesh2.js";
 import { InstancedRenderItem, InstancedRenderList } from "../utils/InstancedRenderList.js";
 import { LODLevel, LODRenderList } from "./LOD.js";
 import { BVHNode } from "bvh.js";
-import { Camera, Frustum, Material, Matrix4, Sphere, Vector3 } from "three";
+import { Camera, Frustum, Material, Matrix4, Sphere, TypedArray, Vector3 } from "three";
 
 // TODO: fix shadowMap LOD sorting objects?
 
@@ -25,7 +25,7 @@ export type OnFrustumEnterCallback = (index: number, camera: Camera, cameraLOD?:
 
 /** @internal Reusable state for BVH culling callback to avoid closure allocation */
 interface BVHCullingState {
-  array: Uint32Array;
+  array: TypedArray;
   instancesArrayCount: number;
   sortObjects: boolean;
   onFrustumEnter: OnFrustumEnterCallback;
