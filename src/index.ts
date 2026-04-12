@@ -15,6 +15,7 @@ export * from './core/utils/GLInstancedBufferAttribute.js';
 export * from './core/utils/InstancedRenderList.js';
 export * from './core/utils/PropertiesOverride.js';
 export * from './core/utils/SquareDataTexture.js';
+export * from './core/utils/TexturePool.js';
 
 export * from './shaders/ShaderChunk.js';
 export * from './shaders/chunks/instanced_color_pars_vertex.glsl';

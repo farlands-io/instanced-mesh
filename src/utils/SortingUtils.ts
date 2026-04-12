@@ -1,7 +1,7 @@
-import { Material } from 'three';
-import { radixSort, RadixSortOptions } from 'three/addons/utils/SortUtils.js';
-import { InstancedMesh2 } from '../core/InstancedMesh2.js';
-import { InstancedRenderItem } from '../core/utils/InstancedRenderList.js';
+import { InstancedMesh2 } from "../core/InstancedMesh2.js";
+import { InstancedRenderItem } from "../core/utils/InstancedRenderList.js";
+import { Material } from "three";
+import { radixSort, RadixSortOptions } from "three/addons/utils/SortUtils.js";
 
 type radixSortCallback = (list: InstancedRenderItem[]) => void;
 
@@ -17,7 +17,7 @@ export function createRadixSort(target: InstancedMesh2): radixSortCallback {
   const options: RadixSortOptions<InstancedRenderItem> = {
     get: (el) => el.depthSort,
     aux: new Array(target._capacity),
-    reversed: false
+    reversed: false,
   };
 
   return function sortFunction(list: InstancedRenderItem[]): void {
@@ -30,7 +30,9 @@ export function createRadixSort(target: InstancedMesh2): radixSortCallback {
     let minZ = Infinity;
     let maxZ = -Infinity;
 
-    for (const { depth } of list) {
+    const len = list.length;
+    for (let i = 0; i < len; i++) {
+      const depth = list[i].depth;
       if (depth > maxZ) maxZ = depth;
       if (depth < minZ) minZ = depth;
     }
@@ -38,7 +40,8 @@ export function createRadixSort(target: InstancedMesh2): radixSortCallback {
     const depthDelta = maxZ - minZ;
     const factor = (2 ** 32 - 1) / depthDelta;
 
-    for (const item of list) {
+    for (let i = 0; i < len; i++) {
+      const item = list[i];
       item.depthSort = (item.depth - minZ) * factor;
     }
 

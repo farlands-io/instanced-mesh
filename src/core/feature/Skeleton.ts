@@ -27,7 +27,10 @@ InstancedMesh2.prototype.initSkeleton = function (skeleton: Skeleton, disableMat
     this.skeleton = skeleton;
     this.bindMatrix = new Matrix4();
     this.bindMatrixInverse = new Matrix4();
-    this.boneTexture = new SquareDataTexture(Float32Array, 4, 4 * bones.length, this._capacity);
+    this.boneTexture = this._texturePool
+      ? this._texturePool.acquire(Float32Array, 4, 4 * bones.length, this._capacity)
+      : new SquareDataTexture(Float32Array, 4, 4 * bones.length, this._capacity);
+    this.updatePropertiesKey();
 
     if (disableMatrixAutoUpdate) {
       for (const bone of bones) {

@@ -17,7 +17,10 @@ function propertiesGetCallback(object: unknown): unknown {
 
 function addProperties(material: unknown): void {
   if (propertiesGet.has(material)) return;
+  addPropertiesCreate(material);
+}
 
+function addPropertiesCreate(material: unknown): void {
   const materialProperties: { [x: string]: any } = {};
 
   propertiesGet.set(material, () => {
@@ -35,7 +38,8 @@ export function patchProperties(obj: InstancedMesh2, renderer: WebGLRenderer, ma
   const properties = renderer.properties;
   propertiesGetBase = properties.get;
 
-  const key = `${!!obj.colorsTexture}_${obj._useOpacity}_${!!obj.boneTexture}_${!!obj.uniformsTexture}`;
+  // PATCHED: Use cached key to avoid string allocation every frame
+  const key = obj._propertiesKey ?? `${!!obj.colorsTexture}_${obj._useOpacity}_${!!obj.boneTexture}_${!!obj.uniformsTexture}`;
   propertiesGetMap[key] ??= new WeakMap<any, () => unknown>();
   propertiesGet = propertiesGetMap[key];
 

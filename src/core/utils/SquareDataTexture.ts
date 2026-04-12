@@ -109,6 +109,8 @@ export class SquareDataTexture extends DataTexture {
   protected _utils: WebGLUtils = null; // TODO add it to renderer instead of creating for each texture
   protected _needsUpdate = true;
   protected _lastWidth = -1;
+  protected _rowsInfoResult: UpdateRowInfo[] = []; // Preallocate result array
+  protected _rowsInfoPool: UpdateRowInfo[] = []; // Pool of reusable row info objects
 
   /**
    * @param arrayType The constructor for the TypedArray.
@@ -234,10 +236,11 @@ export class SquareDataTexture extends DataTexture {
     this._rowToUpdate.fill(false);
   }
 
-  // TODO reuse same objects to prevent memory leak
+  // PATCHED: Reuse objects to prevent GC pressure
   protected getUpdateRowsInfo(): UpdateRowInfo[] {
     const rowsToUpdate = this._rowToUpdate;
-    const result: UpdateRowInfo[] = [];
+    const result = this._rowsInfoResult;
+    result.length = 0; // Clear without deallocating
 
     for (let i = 0, l = rowsToUpdate.length; i < l; i++) {
       if (rowsToUpdate[i]) {
@@ -245,7 +248,16 @@ export class SquareDataTexture extends DataTexture {
         for (; i < l; i++) {
           if (!rowsToUpdate[i]) break;
         }
-        result.push({ row, count: i - row });
+
+        // Reuse object from pool or create new one
+        let rowInfo = this._rowsInfoPool.pop();
+        if (!rowInfo) {
+          rowInfo = { row: 0, count: 0 };
+        }
+        rowInfo.row = row;
+        rowInfo.count = i - row;
+
+        result.push(rowInfo);
       }
     }
 
@@ -275,6 +287,11 @@ export class SquareDataTexture extends DataTexture {
 
     for (const { count, row } of info) {
       gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, row, width, count, glFormat, glType, data, row * width * channels);
+    }
+
+    // Return row info objects to pool for reuse
+    for (const rowInfo of info) {
+      this._rowsInfoPool.push(rowInfo);
     }
 
     this.onUpdate?.(this);
