@@ -1,10 +1,16 @@
 #ifdef USE_INSTANCING_INDIRECT
   attribute uint instanceIndex;
-  uniform highp sampler2D matricesTexture;  
+  uniform highp sampler2D matricesTexture;
+
+  #ifdef USE_INSTANCING_SECTOR_INDIRECT
+    #define PIXELS_PER_INSTANCE 6
+  #else
+    #define PIXELS_PER_INSTANCE 4
+  #endif
 
   mat4 getInstancedMatrix() {
     int size = textureSize( matricesTexture, 0 ).x;
-    int j = int( instanceIndex ) * 4;
+    int j = int( instanceIndex ) * PIXELS_PER_INSTANCE;
     int x = j % size;
     int y = j / size;
     vec4 v1 = texelFetch( matricesTexture, ivec2( x, y ), 0 );

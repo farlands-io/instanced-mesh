@@ -43,6 +43,10 @@ InstancedMesh2.prototype.resizeBuffers = function (capacity: number): InstancedM
 
   this.matricesTexture.resize(capacity);
 
+  if (this._hasSectors) {
+    this._intView = new Int32Array(this.matricesTexture._data.buffer);
+  }
+
   if (this.colorsTexture) {
     this.colorsTexture.resize(capacity);
     if (capacity > oldCapacity) {

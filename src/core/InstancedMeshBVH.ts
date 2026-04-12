@@ -248,13 +248,19 @@ export class InstancedMeshBVH {
    * @param raycaster The raycaster used for raycasting.
    * @param onIntersection Callback function invoked when a ray intersects an instance.
    */
-  public raycast(raycaster: Raycaster, onIntersection: onIntersectionRayCallback<number>): void {
+  public raycast(raycaster: Raycaster, onIntersection: onIntersectionRayCallback<number>, sectorOffset?: Vector3): void {
     const ray = raycaster.ray;
     const origin = this._origin;
     const dir = this._dir;
 
     vec3ToArray(ray.origin, origin);
     vec3ToArray(ray.direction, dir);
+
+    if (sectorOffset) {
+      origin[0] += sectorOffset.x;
+      origin[1] += sectorOffset.y;
+      origin[2] += sectorOffset.z;
+    }
 
     // TODO should we add margin check? maybe is not worth it
     this.bvh.rayIntersections(dir, origin, onIntersection, raycaster.near, raycaster.far);
@@ -289,11 +295,23 @@ export class InstancedMeshBVH {
       box3ToArray(_box3, array);
     }
 
+    // Offset box into BVH anchor space (sector 0,0,0)
+    if (this.target._hasSectors) {
+      const intView = this.target._intView;
+      const sectorOffset = id * this.target._matrixStride + 16;
+      const ox = intView[sectorOffset] * 128;      // sectorLowX * SECTOR_SCALE
+      const oy = intView[sectorOffset + 1] * 128;  // sectorLowY * SECTOR_SCALE
+      const oz = intView[sectorOffset + 2] * 128;  // sectorLowZ * SECTOR_SCALE
+      array[0] += ox; array[1] += ox;  // minX, maxX
+      array[2] += oy; array[3] += oy;  // minY, maxY
+      array[4] += oz; array[5] += oz;  // minZ, maxZ
+    }
+
     return array;
   }
 
   protected getSphereFromMatrix_centeredGeometry(id: number, array: Float32Array, target: SphereTarget): SphereTarget {
-    const offset = id * 16;
+    const offset = id * this.target._matrixStride;
 
     const m0 = array[offset + 0];
     const m1 = array[offset + 1];

@@ -1,9 +1,80 @@
-import { Color, ColorRepresentation, Euler, Matrix4, Mesh, Object3D, Quaternion, Vector3 } from 'three';
-import { InstancedMesh2 } from './InstancedMesh2.js';
-import { UniformValue, UniformValueObj } from './utils/SquareDataTexture.js';
+import { InstancedMesh2 } from "./InstancedMesh2.js";
+import { UniformValue, UniformValueObj } from "./utils/SquareDataTexture.js";
+import { Color, ColorRepresentation, Euler, Matrix4, Mesh, Object3D, Quaternion, Vector3 } from "three";
 
 // TODO add other object3D methods
 // TODO implement parent
+
+/**
+ * Represents a 3D sector coordinate with int64 precision.
+ * Sectors are stored as BigInt values to support the full int64 range.
+ */
+export class Sector {
+  public x: bigint = 0n;
+  public y: bigint = 0n;
+  public z: bigint = 0n;
+
+  /**
+   * Sets the sector coordinates.
+   * @param x The X coordinate.
+   * @param y The Y coordinate.
+   * @param z The Z coordinate.
+   * @returns This sector instance for chaining.
+   */
+  set(x: bigint, y: bigint, z: bigint): this {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    return this;
+  }
+
+  /**
+   * Copies values from another Sector instance.
+   * @param sector The sector to copy from.
+   * @returns This sector instance for chaining.
+   */
+  copy(sector: Sector): this {
+    this.x = sector.x;
+    this.y = sector.y;
+    this.z = sector.z;
+    return this;
+  }
+
+  /**
+   * Creates a clone of this sector.
+   * @returns A new Sector instance with the same values.
+   */
+  clone(): Sector {
+    return new Sector().copy(this);
+  }
+
+  /**
+   * Converts this sector to an array.
+   * @param array Optional array to write values into.
+   * @param offset Starting offset in the array.
+   * @returns The array containing the sector values.
+   */
+  toArray(array?: bigint[], offset = 0): bigint[] {
+    array = array || [];
+    array[offset] = this.x;
+    array[offset + 1] = this.y;
+    array[offset + 2] = this.z;
+    return array;
+  }
+
+  /**
+   * Sets this sector from an array.
+   * @param array The array to read values from.
+   * @param offset Starting offset in the array.
+   * @returns This sector instance for chaining.
+   */
+  fromArray(array: bigint[], offset = 0): this {
+    this.x = array[offset];
+    this.y = array[offset + 1];
+    this.z = array[offset + 2];
+    return this;
+  }
+}
 
 /**
  * Represents an instance in an `InstancedMesh2`.
@@ -43,42 +114,73 @@ export class InstancedEntity {
   /**
    * The visibility state set and got from `owner.availabilityArray`.
    */
-  public get visible(): boolean { return this.owner.getVisibilityAt(this.id); }
-  public set visible(value: boolean) { this.owner.setVisibilityAt(this.id, value); }
+  public get visible(): boolean {
+    return this.owner.getVisibilityAt(this.id);
+  }
+  public set visible(value: boolean) {
+    this.owner.setVisibilityAt(this.id, value);
+  }
 
   /**
    * The availability set and got from `owner.availabilityArray`.
    */
-  public get active(): boolean { return this.owner.getActiveAt(this.id); }
-  public set active(value: boolean) { this.owner.setActiveAt(this.id, value); }
+  public get active(): boolean {
+    return this.owner.getActiveAt(this.id);
+  }
+  public set active(value: boolean) {
+    this.owner.setActiveAt(this.id, value);
+  }
 
   /**
    * Color set and got from `owner.colorsTexture`.
    */
-  public get color(): Color { return this.owner.getColorAt(this.id); }
-  public set color(value: ColorRepresentation) { this.owner.setColorAt(this.id, value); }
+  public get color(): Color {
+    return this.owner.getColorAt(this.id);
+  }
+  public set color(value: ColorRepresentation) {
+    this.owner.setColorAt(this.id, value);
+  }
 
   /**
    * Opacity set and got from `owner.colorsTexture`.
    */
-  public get opacity(): number { return this.owner.getOpacityAt(this.id); }
-  public set opacity(value: number) { this.owner.setOpacityAt(this.id, value); }
+  public get opacity(): number {
+    return this.owner.getOpacityAt(this.id);
+  }
+  public set opacity(value: number) {
+    this.owner.setOpacityAt(this.id, value);
+  }
+
+  /**
+   * Sector coordinate set in the owner's matricesTexture.
+   */
+  public setSector(x: bigint, y: bigint, z: bigint) {
+    this.owner.setSectorAt(this.id, x, y, z);
+  }
 
   /**
    * Morph target influences set and got from `owner.morphTexture`.
    */
-  public get morph(): Mesh { return this.owner.getMorphAt(this.id); }
-  public set morph(value: Mesh) { this.owner.setMorphAt(this.id, value); }
+  public get morph(): Mesh {
+    return this.owner.getMorphAt(this.id);
+  }
+  public set morph(value: Mesh) {
+    this.owner.setMorphAt(this.id, value);
+  }
 
   /**
    * The local transform matrix got from `owner.matricesTexture`.
    */
-  public get matrix(): Matrix4 { return this.owner.getMatrixAt(this.id); }
+  public get matrix(): Matrix4 {
+    return this.owner.getMatrixAt(this.id);
+  }
 
   /**
    * The world transform matrix got by multiplying the matrix got from `owner.matricesTexture` and `this.owner.matrixWorld`.
    */
-  public get matrixWorld(): Matrix4 { return this.matrix.premultiply(this.owner.matrixWorld); }
+  public get matrixWorld(): Matrix4 {
+    return this.matrix.premultiply(this.owner.matrixWorld);
+  }
 
   /**
    * This object is instantiated automatically by setting `createEntities` to `true` in the `InstancedMesh2` constructor parameters.
@@ -93,7 +195,7 @@ export class InstancedEntity {
 
     if (useEuler) {
       const quaternion = this.quaternion;
-      const rotation = this.rotation = new Euler();
+      const rotation = (this.rotation = new Euler());
 
       rotation._onChange(() => quaternion.setFromEuler(rotation, false));
       quaternion._onChange(() => rotation.setFromQuaternion(quaternion, undefined, false));
@@ -107,7 +209,7 @@ export class InstancedEntity {
     const owner = this.owner;
     const te = owner.matricesTexture._data;
     const id = this.id;
-    const offset = id * 16;
+    const offset = id * owner._matrixStride;
 
     te[offset + 0] = 1;
     te[offset + 1] = 0;
@@ -143,15 +245,28 @@ export class InstancedEntity {
     const scale = this.scale;
     const te = owner.matricesTexture._data;
     const id = this.id;
-    const offset = id * 16;
+    const offset = id * owner._matrixStride;
 
-    const x = quaternion._x, y = quaternion._y, z = quaternion._z, w = quaternion._w;
-    const x2 = x + x, y2 = y + y, z2 = z + z;
-    const xx = x * x2, xy = x * y2, xz = x * z2;
-    const yy = y * y2, yz = y * z2, zz = z * z2;
-    const wx = w * x2, wy = w * y2, wz = w * z2;
+    const x = quaternion._x,
+      y = quaternion._y,
+      z = quaternion._z,
+      w = quaternion._w;
+    const x2 = x + x,
+      y2 = y + y,
+      z2 = z + z;
+    const xx = x * x2,
+      xy = x * y2,
+      xz = x * z2;
+    const yy = y * y2,
+      yz = y * z2,
+      zz = z * z2;
+    const wx = w * x2,
+      wy = w * y2,
+      wz = w * z2;
 
-    const sx = scale.x, sy = scale.y, sz = scale.z;
+    const sx = scale.x,
+      sy = scale.y,
+      sz = scale.z;
 
     te[offset + 0] = (1 - (yy + zz)) * sx;
     te[offset + 1] = (xy + wz) * sx;
@@ -190,7 +305,7 @@ export class InstancedEntity {
     const position = this.position;
     const te = owner.matricesTexture._data;
     const id = this.id;
-    const offset = id * 16;
+    const offset = id * owner._matrixStride;
 
     te[offset + 12] = position.x;
     te[offset + 13] = position.y;
@@ -217,7 +332,7 @@ export class InstancedEntity {
    * Updates the bones of the skeleton to the instance.
    * @param updateBonesMatrices Whether to update the matrices of the bones. Default is `true`.
    * @param excludeBonesSet An optional set of bone names to exclude from updates, skipping their local matrix updates.
-  */
+   */
   public updateBones(updateBonesMatrices = true, excludeBonesSet?: Set<string>): void {
     this.owner.setBonesAt(this.id, updateBonesMatrices, excludeBonesSet);
   }

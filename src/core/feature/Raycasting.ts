@@ -15,9 +15,19 @@ const _direction = new Vector3();
 const _worldScale = new Vector3();
 const _invMatrixWorld = new Matrix4();
 const _sphere = new Sphere();
+const _sectorOffset = new Vector3();
+const _bvhRayOffset = new Vector3();
+const SECTOR_SCALE = 128;
 
 InstancedMesh2.prototype.raycast = function (raycaster, result) {
   if (this._parentLOD || !this.material || this._instancesArrayCount === 0 || !this.instanceIndex) return;
+
+  // Mesh-level bounding sphere pre-check (skip for sector meshes where bounding sphere is inaccurate)
+  if (!this._hasSectors) {
+    if (this.boundingSphere === null) this.computeBoundingSphere();
+    _sphere.copy(this.boundingSphere).applyMatrix4(this.matrixWorld);
+    if (!raycaster.ray.intersectsSphere(_sphere)) return;
+  }
 
   _mesh.geometry = this._geometry;
   _mesh.material = this.material;
@@ -45,8 +55,18 @@ InstancedMesh2.prototype.raycast = function (raycaster, result) {
 
 InstancedMesh2.prototype.raycastInstances = function (raycaster, result) {
   if (this.bvh) {
-    this.bvh.raycast(raycaster, (instanceId) => this.checkObjectIntersection(raycaster, instanceId, result));
-    // TODO test with three-mesh-bvh
+    let rayOffset: Vector3 | undefined;
+    if (this._hasSectors && this._globalTrackedSectorLow) {
+      const tracked = this._globalTrackedSectorLow;
+      const wo = this._globalWorldOffset;
+      _bvhRayOffset.set(
+        (tracked.x | 0) * SECTOR_SCALE + (wo?.x ?? 0),
+        (tracked.y | 0) * SECTOR_SCALE + (wo?.y ?? 0),
+        (tracked.z | 0) * SECTOR_SCALE + (wo?.z ?? 0),
+      );
+      rayOffset = _bvhRayOffset;
+    }
+    this.bvh.raycast(raycaster, (instanceId) => this.checkObjectIntersection(raycaster, instanceId, result), rayOffset);
   } else {
     if (this.boundingSphere === null) this.computeBoundingSphere();
     _sphere.copy(this.boundingSphere);
@@ -67,6 +87,13 @@ InstancedMesh2.prototype.checkObjectIntersection = function (raycaster, objectIn
   if (objectIndex > this._instancesArrayCount || !this.getActiveAndVisibilityAt(objectIndex)) return;
 
   this.getMatrixAt(objectIndex, _mesh.matrixWorld);
+
+  if (this._hasSectors) {
+    this.getSectorOffsetFor(objectIndex, _sectorOffset);
+    _mesh.matrixWorld.elements[12] += _sectorOffset.x;
+    _mesh.matrixWorld.elements[13] += _sectorOffset.y;
+    _mesh.matrixWorld.elements[14] += _sectorOffset.z;
+  }
 
   _mesh.raycast(raycaster, _intersections);
 
