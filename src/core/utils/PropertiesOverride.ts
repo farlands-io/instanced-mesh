@@ -36,7 +36,10 @@ function addPropertiesCreate(material: unknown): void {
 
 export function patchProperties(obj: InstancedMesh2, renderer: WebGLRenderer, material: unknown): void {
   const properties = renderer.properties;
-  propertiesGetBase = properties.get;
+
+  if (properties.get !== propertiesGetCallback) {
+    propertiesGetBase = properties.get;
+  }
 
   // PATCHED: Use cached key to avoid string allocation every frame
   const key = obj._propertiesKey ?? `${!!obj.colorsTexture}_${obj._useOpacity}_${!!obj.boneTexture}_${!!obj.uniformsTexture}`;
