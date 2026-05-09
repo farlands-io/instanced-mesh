@@ -153,8 +153,10 @@ declare module "../InstancedMesh2.js" {
      * Performs frustum culling and manages LOD visibility.
      * @param camera The main camera used for rendering.
      * @param cameraLOD An optional camera for LOD calculations. Defaults to the main camera.
+     * @param viewProjection Optional precomputed `projectionMatrix * matrixWorldInverse` to avoid
+     *   recomputing per mesh when culling many meshes against the same camera in one frame.
      */
-    performFrustumCulling(camera: Camera, cameraLOD?: Camera): void;
+    performFrustumCulling(camera: Camera, cameraLOD?: Camera, viewProjection?: Matrix4): void;
 
     /** @internal */ getSectorAwarePosition(instanceId: number, target: Vector3): Vector3;
     /** @internal */ getSectorOffsetFor(instanceId: number, target: Vector3): Vector3;
@@ -164,13 +166,18 @@ declare module "../InstancedMesh2.js" {
       camera: Camera,
       shadowCamera: Camera | null,
     ): boolean;
-    /** @internal */ frustumCulling(camera: Camera): void;
+    /** @internal */ frustumCulling(camera: Camera, viewProjection?: Matrix4): void;
     /** @internal */ updateIndexArray(): void;
     /** @internal */ updateRenderList(): void;
     /** @internal */ BVHCulling(camera: Camera): void;
     /** @internal */ linearCulling(camera: Camera): void;
 
-    /** @internal */ frustumCullingLOD(LODrenderList: LODRenderList, camera: Camera, cameraLOD: Camera): void;
+    /** @internal */ frustumCullingLOD(
+      LODrenderList: LODRenderList,
+      camera: Camera,
+      cameraLOD: Camera,
+      viewProjection?: Matrix4,
+    ): void;
     /** @internal */ BVHCullingLOD(
       LODrenderList: LODRenderList,
       indexes: Uint32Array[],
@@ -259,7 +266,11 @@ InstancedMesh2.prototype.getSectorOffsetFor = function (instanceId: number, targ
   return target;
 };
 
-InstancedMesh2.prototype.performFrustumCulling = function (camera: Camera, cameraLOD = camera) {
+InstancedMesh2.prototype.performFrustumCulling = function (
+  camera: Camera,
+  cameraLOD = camera,
+  viewProjection?: Matrix4,
+) {
   const mainMesh = this._parentLOD ?? this;
   const LODinfo = mainMesh.LODinfo;
   let LODrenderList: LODRenderList;
@@ -277,8 +288,8 @@ InstancedMesh2.prototype.performFrustumCulling = function (camera: Camera, camer
 
   if (mainMesh._instancesArrayCount === 0) return;
 
-  if (LODrenderList?.levels.length > 0) mainMesh.frustumCullingLOD(LODrenderList, camera, cameraLOD);
-  else mainMesh.frustumCulling(camera);
+  if (LODrenderList?.levels.length > 0) mainMesh.frustumCullingLOD(LODrenderList, camera, cameraLOD, viewProjection);
+  else mainMesh.frustumCulling(camera, viewProjection);
 };
 
 InstancedMesh2.prototype.updateLastRenderInfo = function (frame, camera, shadowCamera) {
@@ -302,7 +313,7 @@ InstancedMesh2.prototype.frustumCullingAlreadyPerformed = function (frame, camer
   return false;
 };
 
-InstancedMesh2.prototype.frustumCulling = function (camera: Camera) {
+InstancedMesh2.prototype.frustumCulling = function (camera: Camera, viewProjection?: Matrix4) {
   const sortObjects = this._sortObjects;
   const perObjectFrustumCulled = this._perObjectFrustumCulled;
   const array = this.instanceIndex.array;
@@ -323,7 +334,11 @@ InstancedMesh2.prototype.frustumCulling = function (camera: Camera) {
   if (!perObjectFrustumCulled) {
     this.updateRenderList();
   } else {
-    _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+    if (viewProjection) {
+      _projScreenMatrix.multiplyMatrices(viewProjection, this.matrixWorld);
+    } else {
+      _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+    }
 
     if (this.bvh) {
       if (this._hasSectors && this._globalTrackedSectorLow) {
@@ -452,6 +467,7 @@ InstancedMesh2.prototype.frustumCullingLOD = function (
   LODrenderList: LODRenderList,
   camera: Camera,
   cameraLOD: Camera,
+  viewProjection?: Matrix4,
 ) {
   const { count, levels } = LODrenderList;
 
@@ -465,7 +481,11 @@ InstancedMesh2.prototype.frustumCullingLOD = function (
   const isShadowRendering = camera !== cameraLOD;
   const sortObjects = !isShadowRendering && this._sortObjects; // sort is disabled when render shadows
 
-  _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+  if (viewProjection) {
+    _projScreenMatrix.multiplyMatrices(viewProjection, this.matrixWorld);
+  } else {
+    _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+  }
   _invMatrixWorld.copy(this.matrixWorld).invert();
   _cameraPos.setFromMatrixPosition(camera.matrixWorld).applyMatrix4(_invMatrixWorld);
   _cameraLODPos.setFromMatrixPosition(cameraLOD.matrixWorld).applyMatrix4(_invMatrixWorld);
