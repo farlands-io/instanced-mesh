@@ -142,7 +142,7 @@ InstancedMesh2.prototype.getSectorOffsetFor = function (instanceId, target) {
     target.z = dz * SECTOR_SCALE - (wo?.z ?? 0);
     return target;
 };
-InstancedMesh2.prototype.performFrustumCulling = function (camera, cameraLOD = camera) {
+InstancedMesh2.prototype.performFrustumCulling = function (camera, cameraLOD = camera, viewProjection) {
     const mainMesh = this._parentLOD ?? this;
     const LODinfo = mainMesh.LODinfo;
     let LODrenderList;
@@ -159,9 +159,9 @@ InstancedMesh2.prototype.performFrustumCulling = function (camera, cameraLOD = c
     if (mainMesh._instancesArrayCount === 0)
         return;
     if (LODrenderList?.levels.length > 0)
-        mainMesh.frustumCullingLOD(LODrenderList, camera, cameraLOD);
+        mainMesh.frustumCullingLOD(LODrenderList, camera, cameraLOD, viewProjection);
     else
-        mainMesh.frustumCulling(camera);
+        mainMesh.frustumCulling(camera, viewProjection);
 };
 InstancedMesh2.prototype.updateLastRenderInfo = function (frame, camera, shadowCamera) {
     const lastRenderInfo = this._lastRenderInfo;
@@ -179,7 +179,7 @@ InstancedMesh2.prototype.frustumCullingAlreadyPerformed = function (frame, camer
     this.updateLastRenderInfo(frame, camera, shadowCamera);
     return false;
 };
-InstancedMesh2.prototype.frustumCulling = function (camera) {
+InstancedMesh2.prototype.frustumCulling = function (camera, viewProjection) {
     const sortObjects = this._sortObjects;
     const perObjectFrustumCulled = this._perObjectFrustumCulled;
     const array = this.instanceIndex.array;
@@ -197,7 +197,12 @@ InstancedMesh2.prototype.frustumCulling = function (camera) {
         this.updateRenderList();
     }
     else {
-        _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+        if (viewProjection) {
+            _projScreenMatrix.multiplyMatrices(viewProjection, this.matrixWorld);
+        }
+        else {
+            _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+        }
         if (this.bvh) {
             if (this._hasSectors && this._globalTrackedSectorLow) {
                 const tracked = this._globalTrackedSectorLow;
@@ -303,7 +308,7 @@ InstancedMesh2.prototype.linearCulling = function (camera) {
     }
     this.count = count;
 };
-InstancedMesh2.prototype.frustumCullingLOD = function (LODrenderList, camera, cameraLOD) {
+InstancedMesh2.prototype.frustumCullingLOD = function (LODrenderList, camera, cameraLOD, viewProjection) {
     const { count, levels } = LODrenderList;
     for (let i = 0; i < levels.length; i++) {
         if (!levels[i].object.instanceIndex)
@@ -313,7 +318,12 @@ InstancedMesh2.prototype.frustumCullingLOD = function (LODrenderList, camera, ca
     }
     const isShadowRendering = camera !== cameraLOD;
     const sortObjects = !isShadowRendering && this._sortObjects; // sort is disabled when render shadows
-    _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+    if (viewProjection) {
+        _projScreenMatrix.multiplyMatrices(viewProjection, this.matrixWorld);
+    }
+    else {
+        _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse).multiply(this.matrixWorld);
+    }
     _invMatrixWorld.copy(this.matrixWorld).invert();
     _cameraPos.setFromMatrixPosition(camera.matrixWorld).applyMatrix4(_invMatrixWorld);
     _cameraLODPos.setFromMatrixPosition(cameraLOD.matrixWorld).applyMatrix4(_invMatrixWorld);

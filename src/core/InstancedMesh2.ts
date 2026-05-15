@@ -431,6 +431,7 @@ export class InstancedMesh2<
     depthMaterial: Material,
     group: any,
   ): void {
+    if (this._instancesArrayCount === 0) return;
     this.unpatchMaterial(renderer, depthMaterial);
   }
 
@@ -442,6 +443,7 @@ export class InstancedMesh2<
     material: Material,
     group: any,
   ): void {
+    if (this._instancesArrayCount === 0) return;
     this.unpatchMaterial(renderer, material);
     if (this.instanceIndex || (group && !this.isLastGroup(group.materialIndex))) return;
     this.initIndexAttribute();

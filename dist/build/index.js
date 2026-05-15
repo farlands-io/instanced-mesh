@@ -1,6 +1,6 @@
-import { Quaternion as jt, Vector3 as y, Euler as Yt, Box3 as yt, GLBufferAttribute as Zt, DataTexture as bt, WebGLUtils as Qt, ColorManagement as it, NoColorSpace as wt, FloatType as At, UnsignedIntType as Jt, IntType as te, RGBAFormat as ee, RGBAIntegerFormat as se, RGFormat as ne, RGIntegerFormat as ie, RedFormat as Tt, RedIntegerFormat as re, Mesh as St, AttachedBindMode as It, InstancedBufferAttribute as oe, Matrix4 as j, Color as ae, Sphere as ht, DetachedBindMode as ce, Frustum as he, ShaderMaterial as le, Ray as ue, ShaderChunk as x } from "three";
-import { BVH as fe, HybridBuilder as de, WebGLCoordinateSystem as pe, vec3ToArray as Ct, box3ToArray as Ot } from "bvh.js";
-import { radixSort as me } from "three/addons/utils/SortUtils.js";
+import { Quaternion as $t, Vector3 as y, Euler as Zt, Box3 as yt, GLBufferAttribute as Qt, DataTexture as bt, WebGLUtils as Jt, ColorManagement as it, NoColorSpace as wt, FloatType as At, UnsignedIntType as te, IntType as ee, RGBAFormat as se, RGBAIntegerFormat as ne, RGFormat as ie, RGIntegerFormat as re, RedFormat as Tt, RedIntegerFormat as oe, Mesh as St, AttachedBindMode as It, InstancedBufferAttribute as ae, Matrix4 as j, Color as ce, Sphere as ht, DetachedBindMode as he, Frustum as le, ShaderMaterial as ue, Ray as fe, ShaderChunk as x } from "three";
+import { BVH as de, HybridBuilder as pe, WebGLCoordinateSystem as me, vec3ToArray as Ct, box3ToArray as Ot } from "bvh.js";
+import { radixSort as _e } from "three/addons/utils/SortUtils.js";
 class lt {
   constructor() {
     this.x = 0n, this.y = 0n, this.z = 0n;
@@ -49,7 +49,7 @@ class lt {
     return this.x = t[e], this.y = t[e + 1], this.z = t[e + 2], this;
   }
 }
-class $t {
+class Gt {
   /**
    * This object is instantiated automatically by setting `createEntities` to `true` in the `InstancedMesh2` constructor parameters.
    * Dont instantiate this manually.
@@ -58,8 +58,8 @@ class $t {
    * @param useEuler Whether to use Euler rotations in addition to quaternion rotations.
    */
   constructor(t, e, s) {
-    if (this.isInstanceEntity = !0, this.position = new y(), this.scale = new y(1, 1, 1), this.quaternion = new jt(), this.id = e, this.owner = t, s) {
-      const n = this.quaternion, i = this.rotation = new Yt();
+    if (this.isInstanceEntity = !0, this.position = new y(), this.scale = new y(1, 1, 1), this.quaternion = new $t(), this.id = e, this.owner = t, s) {
+      const n = this.quaternion, i = this.rotation = new Zt();
       i._onChange(() => n.setFromEuler(i, !1)), n._onChange(() => i.setFromQuaternion(n, void 0, !1));
     }
   }
@@ -138,8 +138,8 @@ class $t {
    * The updated matrix is stored in the `owner.matricesTexture`.
    */
   updateMatrix() {
-    const t = this.owner, e = this.position, s = this.quaternion, n = this.scale, i = t.matricesTexture._data, o = this.id, a = o * t._matrixStride, c = s._x, h = s._y, l = s._z, f = s._w, p = c + c, u = h + h, m = l + l, _ = c * p, g = c * u, w = c * m, U = h * u, P = h * m, E = l * m, F = f * p, D = f * u, I = f * m, b = n.x, A = n.y, T = n.z;
-    i[a + 0] = (1 - (U + E)) * b, i[a + 1] = (g + I) * b, i[a + 2] = (w - D) * b, i[a + 3] = 0, i[a + 4] = (g - I) * A, i[a + 5] = (1 - (_ + E)) * A, i[a + 6] = (P + F) * A, i[a + 7] = 0, i[a + 8] = (w + D) * T, i[a + 9] = (P - F) * T, i[a + 10] = (1 - (_ + U)) * T, i[a + 11] = 0, i[a + 12] = e.x, i[a + 13] = e.y, i[a + 14] = e.z, i[a + 15] = 1, t.matricesTexture.enqueueUpdate(o), t.bvh && t.autoUpdateBVH && t.bvh.move(o);
+    const t = this.owner, e = this.position, s = this.quaternion, n = this.scale, i = t.matricesTexture._data, o = this.id, a = o * t._matrixStride, h = s._x, c = s._y, l = s._z, f = s._w, p = h + h, u = c + c, m = l + l, _ = h * p, g = h * u, w = h * m, P = c * u, E = c * m, F = l * m, D = f * p, B = f * u, I = f * m, b = n.x, A = n.y, T = n.z;
+    i[a + 0] = (1 - (P + F)) * b, i[a + 1] = (g + I) * b, i[a + 2] = (w - B) * b, i[a + 3] = 0, i[a + 4] = (g - I) * A, i[a + 5] = (1 - (_ + F)) * A, i[a + 6] = (E + D) * A, i[a + 7] = 0, i[a + 8] = (w + B) * T, i[a + 9] = (E - D) * T, i[a + 10] = (1 - (_ + P)) * T, i[a + 11] = 0, i[a + 12] = e.x, i[a + 13] = e.y, i[a + 14] = e.z, i[a + 15] = 1, t.matricesTexture.enqueueUpdate(o), t.bvh && t.autoUpdateBVH && t.bvh.move(o);
   }
   /**
    * Updates only the position component of the transformation matrix.
@@ -281,8 +281,8 @@ class $t {
     return this.owner.removeInstances(this.id), this;
   }
 }
-const st = new jt(), Lt = new y(), Mt = new y(1, 0, 0), Ut = new y(0, 1, 0), Pt = new y(0, 0, 1);
-class _e {
+const st = new $t(), Lt = new y(), Mt = new y(1, 0, 0), Ut = new y(0, 1, 0), Pt = new y(0, 0, 1);
+class xe {
   /**
    * @param target The target `InstancedMesh2`.
    * @param margin The margin applied for bounding box calculations (default is 0).
@@ -297,7 +297,7 @@ class _e {
       const o = i.boundingSphere.center;
       o.x === 0 && o.y === 0 && o.z === 0 ? (this._geoBoundingSphere = i.boundingSphere, this._sphereTarget = { centerX: 0, centerY: 0, centerZ: 0, maxScale: 0 }) : (console.warn('"getBoxFromSphere" is ignored because geometry is not centered.'), s = !1);
     }
-    this.bvh = new fe(new de(), pe), this._origin = new Float32Array(3), this._dir = new Float32Array(3), this._cameraPos = new Float32Array(3), this._getBoxFromSphere = s;
+    this.bvh = new de(new pe(), me), this._origin = new Float32Array(3), this._dir = new Float32Array(3), this._cameraPos = new Float32Array(3), this._getBoxFromSphere = s;
   }
   /**
    * Builds the BVH from the target mesh's instances using a top-down construction method.
@@ -378,8 +378,8 @@ class _e {
     for (let a = 0; a < s.length; a++)
       i[a] = s[a].distance;
     const o = this._cameraPos;
-    o[0] = e.x, o[1] = e.y, o[2] = e.z, this._margin > 0 && this.accurateCulling ? this.bvh.frustumCullingLOD(t.elements, o, i, (a, c, h, l) => {
-      h.isIntersectedMargin(a.box, l, this._margin) && n(a, c);
+    o[0] = e.x, o[1] = e.y, o[2] = e.z, this._margin > 0 && this.accurateCulling ? this.bvh.frustumCullingLOD(t.elements, o, i, (a, h, c, l) => {
+      c.isIntersectedMargin(a.box, l, this._margin) && n(a, h);
     }) : this.bvh.frustumCullingLOD(t.elements, o, i, n);
   }
   /**
@@ -404,8 +404,8 @@ class _e {
   }
   getBox(t, e) {
     if (this._getBoxFromSphere) {
-      const s = this.target.matricesTexture._data, { centerX: n, centerY: i, centerZ: o, maxScale: a } = this.getSphereFromMatrix_centeredGeometry(t, s, this._sphereTarget), c = this._geoBoundingSphere.radius * a;
-      e[0] = n - c, e[1] = n + c, e[2] = i - c, e[3] = i + c, e[4] = o - c, e[5] = o + c;
+      const s = this.target.matricesTexture._data, { centerX: n, centerY: i, centerZ: o, maxScale: a } = this.getSphereFromMatrix_centeredGeometry(t, s, this._sphereTarget), h = this._geoBoundingSphere.radius * a;
+      e[0] = n - h, e[1] = n + h, e[2] = i - h, e[3] = i + h, e[4] = o - h, e[5] = o + h;
     } else
       Et.copy(this.geoBoundingBox).applyMatrix4(this.target.getMatrixAt(t)), Ot(Et, e);
     if (this.target._hasSectors) {
@@ -415,12 +415,12 @@ class _e {
     return e;
   }
   getSphereFromMatrix_centeredGeometry(t, e, s) {
-    const n = t * this.target._matrixStride, i = e[n + 0], o = e[n + 1], a = e[n + 2], c = e[n + 4], h = e[n + 5], l = e[n + 6], f = e[n + 8], p = e[n + 9], u = e[n + 10], m = i * i + o * o + a * a, _ = c * c + h * h + l * l, g = f * f + p * p + u * u;
+    const n = t * this.target._matrixStride, i = e[n + 0], o = e[n + 1], a = e[n + 2], h = e[n + 4], c = e[n + 5], l = e[n + 6], f = e[n + 8], p = e[n + 9], u = e[n + 10], m = i * i + o * o + a * a, _ = h * h + c * c + l * l, g = f * f + p * p + u * u;
     return s.maxScale = Math.sqrt(Math.max(m, _, g)), s.centerX = e[n + 12], s.centerY = e[n + 13], s.centerZ = e[n + 14], s;
   }
 }
 const Et = new yt();
-class xe extends Zt {
+class ge extends Qt {
   /**
    * @param gl The WebGL2RenderingContext used to create the buffer.
    * @param type The type of data in the attribute.
@@ -452,7 +452,7 @@ class xe extends Zt {
 }
 let ut = null, ft = null;
 const Ft = {};
-function ge(r) {
+function Dt(r) {
   return ft.get(r)?.() ?? ut(r);
 }
 function ye(r) {
@@ -470,34 +470,34 @@ function be(r) {
 }
 function Ae(r, t, e) {
   const s = t.properties;
-  ut = s.get;
+  s.get !== Dt && (ut = s.get);
   const n = r._propertiesKey ?? `${!!r.colorsTexture}_${r._useOpacity}_${!!r.boneTexture}_${!!r.uniformsTexture}`;
-  Ft[n] ??= /* @__PURE__ */ new WeakMap(), ft = Ft[n], s.get = ge, ye(e);
+  Ft[n] ??= /* @__PURE__ */ new WeakMap(), ft = Ft[n], s.get = Dt, ye(e);
 }
 function Te(r) {
   r.properties.get = ut;
 }
-function Gt(r, t) {
+function Vt(r, t) {
   return Math.max(t, Math.ceil(Math.sqrt(r / t)) * t);
 }
 function Se(r, t, e, s) {
   t === 3 && (console.warn('"channels" cannot be 3. Set to 4. More info: https://github.com/mrdoob/three.js/pull/23228'), t = 4);
-  const n = Gt(s, e), i = new r(n * n * t), o = r.name.includes("Float"), a = r.name.includes("Uint"), c = o ? At : a ? Jt : te;
-  let h;
+  const n = Vt(s, e), i = new r(n * n * t), o = r.name.includes("Float"), a = r.name.includes("Uint"), h = o ? At : a ? te : ee;
+  let c;
   switch (t) {
     case 1:
-      h = o ? Tt : re;
+      c = o ? Tt : oe;
       break;
     case 2:
-      h = o ? ne : ie;
+      c = o ? ie : re;
       break;
     case 4:
-      h = o ? ee : se;
+      c = o ? se : ne;
       break;
   }
-  return { array: i, size: n, type: c, format: h };
+  return { array: i, size: n, type: h, format: c };
 }
-class W extends bt {
+class q extends bt {
   // Pool of reusable row info objects
   /**
    * @param arrayType The constructor for the TypedArray.
@@ -509,15 +509,15 @@ class W extends bt {
    */
   constructor(t, e, s, n, i, o) {
     e === 3 && (e = 4);
-    const { array: a, format: c, size: h, type: l } = Se(t, e, s, n);
-    super(a, h, h, c, l), this.partialUpdate = !0, this.maxUpdateCalls = 1 / 0, this._utils = null, this._needsUpdate = !0, this._lastWidth = -1, this._rowsInfoResult = [], this._rowsInfoPool = [], this._data = a, this._channels = e, this._pixelsPerInstance = s, this._stride = s * e, this._rowToUpdate = new Array(h), this._uniformMap = i, this._fetchUniformsInFragmentShader = o, this.needsUpdate = !0;
+    const { array: a, format: h, size: c, type: l } = Se(t, e, s, n);
+    super(a, c, c, h, l), this.partialUpdate = !0, this.maxUpdateCalls = 1 / 0, this._utils = null, this._needsUpdate = !0, this._lastWidth = -1, this._rowsInfoResult = [], this._rowsInfoPool = [], this._data = a, this._channels = e, this._pixelsPerInstance = s, this._stride = s * e, this._rowToUpdate = new Array(c), this._uniformMap = i, this._fetchUniformsInFragmentShader = o, this.needsUpdate = !0;
   }
   /**
    * Resizes the texture to accommodate a new number of instances.
    * @param count The new total number of instances.
    */
   resize(t) {
-    const e = Gt(t, this._pixelsPerInstance);
+    const e = Vt(t, this._pixelsPerInstance);
     if (e === this.image.width) return;
     const s = this._data, n = this._channels;
     this._rowToUpdate.length = e;
@@ -587,13 +587,13 @@ class W extends bt {
   }
   updateRows(t, e, s, n) {
     const i = e.getContext();
-    this._utils ??= new Qt(i, e.extensions, e.capabilities);
-    const o = this._utils.convert(this.format), a = this._utils.convert(this.type), { data: c, width: h } = this.image, l = this._channels;
+    this._utils ??= new Jt(i, e.extensions, e.capabilities);
+    const o = this._utils.convert(this.format), a = this._utils.convert(this.type), { data: h, width: c } = this.image, l = this._channels;
     e.state.activeTexture(i.TEXTURE0 + n), e.state.bindTexture(i.TEXTURE_2D, t.__webglTexture, i.TEXTURE0 + n);
     const f = it.getPrimaries(it.workingColorSpace), p = this.colorSpace === wt ? null : it.getPrimaries(this.colorSpace), u = this.colorSpace === wt || f === p ? i.NONE : i.BROWSER_DEFAULT_WEBGL;
     i.pixelStorei(i.UNPACK_FLIP_Y_WEBGL, this.flipY), i.pixelStorei(i.UNPACK_PREMULTIPLY_ALPHA_WEBGL, this.premultiplyAlpha), i.pixelStorei(i.UNPACK_ALIGNMENT, this.unpackAlignment), i.pixelStorei(i.UNPACK_COLORSPACE_CONVERSION_WEBGL, u);
     for (const { count: m, row: _ } of s)
-      i.texSubImage2D(i.TEXTURE_2D, 0, 0, _, h, m, o, a, c, _ * h * l);
+      i.texSubImage2D(i.TEXTURE_2D, 0, 0, _, c, m, o, a, h, _ * c * l);
     for (const m of s)
       this._rowsInfoPool.push(m);
     this.onUpdate?.(this);
@@ -686,8 +686,8 @@ class W extends bt {
         e += `mat4 ${s} = mat4(ez_texel${a}, ez_texel${a + 1}, ez_texel${a + 2}, ez_texel${a + 3});
 `;
       else {
-        const c = this.getUniformComponents(i, o);
-        e += `${n} ${s} = ez_texel${a}.${c};
+        const h = this.getUniformComponents(i, o);
+        e += `${n} ${s} = ez_texel${a}.${h};
 `;
       }
     }
@@ -728,12 +728,12 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
       allowsEuler: i,
       renderer: o,
       createEntities: a,
-      globalWorldOffset: c,
-      globalTrackedSectorLow: h,
+      globalWorldOffset: h,
+      globalTrackedSectorLow: c,
       globalTrackedSectorHigh: l,
       texturePool: f
     } = s;
-    super(t, null), this.type = "InstancedMesh2", this.isInstancedMesh2 = !0, this.instances = null, this.instanceIndex = null, this.colorsTexture = null, this._intView = null, this.morphTexture = null, this.boneTexture = null, this.uniformsTexture = null, this.boundingBox = null, this.boundingSphere = null, this.bvh = null, this.customSort = null, this.raycastOnlyFrustum = !1, this.LODinfo = null, this.autoUpdate = !0, this.bindMode = It, this.bindMatrix = null, this.bindMatrixInverse = null, this.skeleton = null, this.autoUpdateBVH = !0, this.onFrustumEnter = null, this._renderer = null, this._instancesCount = 0, this._instancesArrayCount = 0, this._perObjectFrustumCulled = !0, this._sortObjects = !1, this._indexArrayNeedsUpdate = !1, this._useOpacity = !1, this._currentMaterial = null, this._customProgramCacheKeyBase = null, this._onBeforeCompileBase = null, this._definesBase = null, this._freeIds = [], this._globalWorldOffset = null, this._globalTrackedSectorLow = null, this._globalTrackedSectorHigh = null, this._texturePool = null, this._propertiesKey = null, this._cachedProgramCacheKey = null, this._lastCachedMaterial = null, this.isInstancedMesh = !0, this.instanceMatrix = new oe(new Float32Array(0), 16), this.instanceColor = null, this._customProgramCacheKey = () => this._cachedProgramCacheKey !== null && this._lastCachedMaterial === this._currentMaterial ? this._cachedProgramCacheKey : (this._lastCachedMaterial = this._currentMaterial, this._cachedProgramCacheKey = `ez_${this._propertiesKey}_${this._customProgramCacheKeyBase.call(this._currentMaterial)}`, this._cachedProgramCacheKey), this._onBeforeCompile = (u, m) => {
+    super(t, null), this.type = "InstancedMesh2", this.isInstancedMesh2 = !0, this.instances = null, this.instanceIndex = null, this.colorsTexture = null, this._intView = null, this.morphTexture = null, this.boneTexture = null, this.uniformsTexture = null, this.boundingBox = null, this.boundingSphere = null, this.bvh = null, this.customSort = null, this.raycastOnlyFrustum = !1, this.LODinfo = null, this.autoUpdate = !0, this.bindMode = It, this.bindMatrix = null, this.bindMatrixInverse = null, this.skeleton = null, this.autoUpdateBVH = !0, this.onFrustumEnter = null, this._renderer = null, this._instancesCount = 0, this._instancesArrayCount = 0, this._perObjectFrustumCulled = !0, this._sortObjects = !1, this._indexArrayNeedsUpdate = !1, this._useOpacity = !1, this._currentMaterial = null, this._customProgramCacheKeyBase = null, this._onBeforeCompileBase = null, this._definesBase = null, this._freeIds = [], this._globalWorldOffset = null, this._globalTrackedSectorLow = null, this._globalTrackedSectorHigh = null, this._texturePool = null, this._propertiesKey = null, this._cachedProgramCacheKey = null, this._lastCachedMaterial = null, this.isInstancedMesh = !0, this.instanceMatrix = new ae(new Float32Array(0), 16), this.instanceColor = null, this._customProgramCacheKey = () => this._cachedProgramCacheKey !== null && this._lastCachedMaterial === this._currentMaterial ? this._cachedProgramCacheKey : (this._lastCachedMaterial = this._currentMaterial, this._cachedProgramCacheKey = `ez_${this._propertiesKey}_${this._customProgramCacheKeyBase.call(this._currentMaterial)}`, this._cachedProgramCacheKey), this._onBeforeCompile = (u, m) => {
       if (this._onBeforeCompileBase && this._onBeforeCompileBase.call(this._currentMaterial, u, m), u.defines = { ...u.defines }, u.defines.USE_INSTANCING_INDIRECT = "", u.uniforms.matricesTexture = { value: this.matricesTexture }, this.uniformsTexture) {
         u.uniforms.uniformsTexture = { value: this.uniformsTexture };
         const { vertex: _, fragment: g } = this.uniformsTexture.getUniformsGLSL("uniformsTexture", "instanceIndex", "uint");
@@ -760,7 +760,7 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
       ));
     };
     const p = s.capacity > 0 ? s.capacity : we;
-    this._renderer = o, this._capacity = p, this._parentLOD = n, this._geometry = t, this._globalWorldOffset = c ?? null, this._globalTrackedSectorLow = h ?? null, this._globalTrackedSectorHigh = l ?? null, this._texturePool = f ?? null, this.material = e, this._hasSectors = !!c, this._matrixStride = this._hasSectors ? 24 : 16, this._allowsEuler = i ?? !1, this._tempInstance = new $t(this, -1, i), this.availabilityArray = n?.availabilityArray ?? new Array(p * 2), this._createEntities = a, this.initLastRenderInfo(), this.initIndexAttribute(), this.initMatricesTexture();
+    this._renderer = o, this._capacity = p, this._parentLOD = n, this._geometry = t, this._globalWorldOffset = h ?? null, this._globalTrackedSectorLow = c ?? null, this._globalTrackedSectorHigh = l ?? null, this._texturePool = f ?? null, this.material = e, this._hasSectors = !!h, this._matrixStride = this._hasSectors ? 24 : 16, this._allowsEuler = i ?? !1, this._tempInstance = new Gt(this, -1, i), this.availabilityArray = n?.availabilityArray ?? new Array(p * 2), this._createEntities = a, this.initLastRenderInfo(), this.initIndexAttribute(), this.initMatricesTexture();
   }
   // must be null to avoid exception
   /**
@@ -808,8 +808,8 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
   onBeforeShadow(t, e, s, n, i, o, a) {
     if (this._instancesArrayCount === 0) return;
     this.patchMaterial(t, o), this.updateTextures(t, o);
-    const c = t.info.render.frame;
-    this.instanceIndex && this.autoUpdate && !this.frustumCullingAlreadyPerformed(c, s, n) && this.performFrustumCulling(n, s), this.count !== 0 && (this.instanceIndex.update(this._renderer, this.count), this.bindTextures(t, o));
+    const h = t.info.render.frame;
+    this.instanceIndex && this.autoUpdate && !this.frustumCullingAlreadyPerformed(h, s, n) && this.performFrustumCulling(n, s), this.count !== 0 && (this.instanceIndex.update(this._renderer, this.count), this.bindTextures(t, o));
   }
   onBeforeRender(t, e, s, n, i, o) {
     if (this._instancesArrayCount === 0) return;
@@ -821,10 +821,10 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
     this.autoUpdate && !this.frustumCullingAlreadyPerformed(a, s, null) && this.performFrustumCulling(s), this.count !== 0 && (this.instanceIndex.update(this._renderer, this.count), this.bindTextures(t, i));
   }
   onAfterShadow(t, e, s, n, i, o, a) {
-    this.unpatchMaterial(t, o);
+    this._instancesArrayCount !== 0 && this.unpatchMaterial(t, o);
   }
   onAfterRender(t, e, s, n, i, o) {
-    this.unpatchMaterial(t, i), !(this.instanceIndex || o && !this.isLastGroup(o.materialIndex)) && this.initIndexAttribute();
+    this._instancesArrayCount !== 0 && (this.unpatchMaterial(t, i), !(this.instanceIndex || o && !this.isLastGroup(o.materialIndex)) && this.initIndexAttribute());
   }
   updateTextures(t, e) {
     const s = t.properties.get(e);
@@ -835,8 +835,8 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
     if (!n) return;
     const i = s.currentProgram, o = i?.program;
     if (!o) return;
-    const a = t.getContext(), c = i.getUniforms().map, h = a.getParameter(a.CURRENT_PROGRAM);
-    t.state.useProgram(o), this.matricesTexture.bindToProgram(t, a, c, n, "matricesTexture"), this.colorsTexture?.bindToProgram(t, a, c, n, "colorsTexture"), this.uniformsTexture?.bindToProgram(t, a, c, n, "uniformsTexture"), this.boneTexture?.bindToProgram(t, a, c, n, "boneTexture"), t.state.useProgram(h);
+    const a = t.getContext(), h = i.getUniforms().map, c = a.getParameter(a.CURRENT_PROGRAM);
+    t.state.useProgram(o), this.matricesTexture.bindToProgram(t, a, h, n, "matricesTexture"), this.colorsTexture?.bindToProgram(t, a, h, n, "colorsTexture"), this.uniformsTexture?.bindToProgram(t, a, h, n, "uniformsTexture"), this.boneTexture?.bindToProgram(t, a, h, n, "boneTexture"), t.state.useProgram(c);
   }
   isLastGroup(t) {
     const e = this.material;
@@ -852,7 +852,7 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
     const t = this._renderer.getContext(), e = this._capacity, s = new Uint32Array(e);
     for (let n = 0; n < e; n++)
       s[n] = n;
-    this.instanceIndex = new xe(t, t.UNSIGNED_INT, 1, 4, s), this._geometry.setAttribute("instanceIndex", this.instanceIndex);
+    this.instanceIndex = new ge(t, t.UNSIGNED_INT, 1, 4, s), this._geometry.setAttribute("instanceIndex", this.instanceIndex);
   }
   initLastRenderInfo() {
     this._parentLOD || (this._lastRenderInfo = { frame: -1, camera: null, shadowCamera: null });
@@ -860,11 +860,11 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
   initMatricesTexture() {
     if (!this._parentLOD) {
       const t = this._hasSectors ? 6 : 4;
-      this.matricesTexture = this._texturePool ? this._texturePool.acquire(Float32Array, 4, t, this._capacity) : new W(Float32Array, 4, t, this._capacity), this._hasSectors && (this._intView = new Int32Array(this.matricesTexture._data.buffer)), this.updatePropertiesKey();
+      this.matricesTexture = this._texturePool ? this._texturePool.acquire(Float32Array, 4, t, this._capacity) : new q(Float32Array, 4, t, this._capacity), this._hasSectors && (this._intView = new Int32Array(this.matricesTexture._data.buffer)), this.updatePropertiesKey();
     }
   }
   initColorsTexture() {
-    this._parentLOD || (this.colorsTexture = this._texturePool ? this._texturePool.acquire(Float32Array, 4, 1, this._capacity) : new W(Float32Array, 4, 1, this._capacity), this.colorsTexture.colorSpace = it.workingColorSpace, this.colorsTexture._data.fill(1), this.materialsNeedsUpdate(), this.updatePropertiesKey());
+    this._parentLOD || (this.colorsTexture = this._texturePool ? this._texturePool.acquire(Float32Array, 4, 1, this._capacity) : new q(Float32Array, 4, 1, this._capacity), this.colorsTexture.colorSpace = it.workingColorSpace, this.colorsTexture._data.fill(1), this.materialsNeedsUpdate(), this.updatePropertiesKey());
   }
   materialsNeedsUpdate() {
     if (this.material.isMaterial) {
@@ -899,7 +899,7 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
    * @param config Optional configuration parameters object. See `BVHParams` for details.
    */
   computeBVH(t = {}) {
-    this.bvh || (this.bvh = new _e(this, t.margin, t.getBBoxFromBSphere, t.accurateCulling)), this.bvh.clear(), this.bvh.create();
+    this.bvh || (this.bvh = new xe(this, t.margin, t.getBBoxFromBSphere, t.accurateCulling)), this.bvh.clear(), this.bvh.create();
   }
   /**
    * Disposes of the BVH structure.
@@ -940,14 +940,14 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
   }
   /** @internal */
   getPositionAndMaxScaleOnAxisAt(t, e) {
-    const s = t * this._matrixStride, n = this.matricesTexture._data, i = n[s + 0], o = n[s + 1], a = n[s + 2], c = i * i + o * o + a * a, h = n[s + 4], l = n[s + 5], f = n[s + 6], p = h * h + l * l + f * f, u = n[s + 8], m = n[s + 9], _ = n[s + 10], g = u * u + m * m + _ * _;
-    return e.x = n[s + 12], e.y = n[s + 13], e.z = n[s + 14], Math.sqrt(Math.max(c, p, g));
+    const s = t * this._matrixStride, n = this.matricesTexture._data, i = n[s + 0], o = n[s + 1], a = n[s + 2], h = i * i + o * o + a * a, c = n[s + 4], l = n[s + 5], f = n[s + 6], p = c * c + l * l + f * f, u = n[s + 8], m = n[s + 9], _ = n[s + 10], g = u * u + m * m + _ * _;
+    return e.x = n[s + 12], e.y = n[s + 13], e.z = n[s + 14], Math.sqrt(Math.max(h, p, g));
   }
   /** @internal */
   applyMatrixAtToSphere(t, e, s, n) {
-    const i = t * this._matrixStride, o = this.matricesTexture._data, a = o[i + 0], c = o[i + 1], h = o[i + 2], l = o[i + 3], f = o[i + 4], p = o[i + 5], u = o[i + 6], m = o[i + 7], _ = o[i + 8], g = o[i + 9], w = o[i + 10], U = o[i + 11], P = o[i + 12], E = o[i + 13], F = o[i + 14], D = o[i + 15], I = e.center, b = s.x, A = s.y, T = s.z, z = 1 / (l * b + m * A + U * T + D);
-    I.x = (a * b + f * A + _ * T + P) * z, I.y = (c * b + p * A + g * T + E) * z, I.z = (h * b + u * A + w * T + F) * z;
-    const $ = a * a + c * c + h * h, G = f * f + p * p + u * u, V = _ * _ + g * g + w * w;
+    const i = t * this._matrixStride, o = this.matricesTexture._data, a = o[i + 0], h = o[i + 1], c = o[i + 2], l = o[i + 3], f = o[i + 4], p = o[i + 5], u = o[i + 6], m = o[i + 7], _ = o[i + 8], g = o[i + 9], w = o[i + 10], P = o[i + 11], E = o[i + 12], F = o[i + 13], D = o[i + 14], B = o[i + 15], I = e.center, b = s.x, A = s.y, T = s.z, z = 1 / (l * b + m * A + P * T + B);
+    I.x = (a * b + f * A + _ * T + E) * z, I.y = (h * b + p * A + g * T + F) * z, I.z = (c * b + u * A + w * T + D) * z;
+    const $ = a * a + h * h + c * c, G = f * f + p * p + u * u, V = _ * _ + g * g + w * w;
     e.radius = n * Math.sqrt(Math.max($, G, V));
   }
   /**
@@ -1006,7 +1006,7 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
    * @param color The color to assign to the instance.
    */
   setColorAt(t, e) {
-    this.colorsTexture === null && this.initColorsTexture(), e.isColor ? e.toArray(this.colorsTexture._data, t * 4) : Bt.set(e).toArray(this.colorsTexture._data, t * 4), this.colorsTexture.enqueueUpdate(t);
+    this.colorsTexture === null && this.initColorsTexture(), e.isColor ? e.toArray(this.colorsTexture._data, t * 4) : Nt.set(e).toArray(this.colorsTexture._data, t * 4), this.colorsTexture.enqueueUpdate(t);
   }
   /**
    * Gets the color of a specific instance.
@@ -1014,7 +1014,7 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
    * @param color Optional `Color` to store the result.
    * @returns The color of the instance.
    */
-  getColorAt(t, e = Bt) {
+  getColorAt(t, e = Nt) {
     return e.fromArray(this.colorsTexture._data, t * 4);
   }
   /**
@@ -1059,8 +1059,8 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
   setSectorAt(t, e, s, n) {
     const i = this._intView;
     if (!i) return;
-    const o = t * this._matrixStride + 16, [a, c] = this.splitInt64(e), [h, l] = this.splitInt64(s), [f, p] = this.splitInt64(n);
-    i[o + 0] = a, i[o + 1] = h, i[o + 2] = f, i[o + 3] = 0, i[o + 4] = c, i[o + 5] = l, i[o + 6] = p, i[o + 7] = 0, this.matricesTexture.enqueueUpdate(t);
+    const o = t * this._matrixStride + 16, [a, h] = this.splitInt64(e), [c, l] = this.splitInt64(s), [f, p] = this.splitInt64(n);
+    i[o + 0] = a, i[o + 1] = c, i[o + 2] = f, i[o + 3] = 0, i[o + 4] = h, i[o + 5] = l, i[o + 6] = p, i[o + 7] = 0, this.matricesTexture.enqueueUpdate(t);
   }
   /**
    * Retrieves the sector coordinate of a specific instance.
@@ -1072,8 +1072,8 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
     const s = this._intView;
     if (!s)
       return e.set(0n, 0n, 0n);
-    const n = t * this._matrixStride + 16, i = s[n + 0], o = s[n + 1], a = s[n + 2], c = s[n + 4], h = s[n + 5], l = s[n + 6];
-    return e.x = this.combineInt64(i, c), e.y = this.combineInt64(o, h), e.z = this.combineInt64(a, l), e;
+    const n = t * this._matrixStride + 16, i = s[n + 0], o = s[n + 1], a = s[n + 2], h = s[n + 4], c = s[n + 5], l = s[n + 6];
+    return e.x = this.combineInt64(i, h), e.y = this.combineInt64(o, c), e.z = this.combineInt64(a, l), e;
   }
   /**
    * Copies `position`, `quaternion`, and `scale` of a specific instance to the specified target `Object3D`.
@@ -1092,7 +1092,7 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
     const s = t.boundingBox, n = this.boundingBox;
     n.makeEmpty();
     for (let i = 0; i < e; i++)
-      this.getActiveAt(i) && (Dt.copy(s).applyMatrix4(this.getMatrixAt(i)), n.union(Dt));
+      this.getActiveAt(i) && (Bt.copy(s).applyMatrix4(this.getMatrixAt(i)), n.union(Bt));
   }
   /**
    * Computes the bounding sphere that encloses all instances, and updates the `boundingSphere` attribute.
@@ -1128,12 +1128,12 @@ const ve = ["r", "g", "b", "a"], ct = class ct extends St {
     this.dispatchEvent({ type: "dispose" }), this._texturePool ? (this._texturePool.release(this.matricesTexture), this.colorsTexture && this._texturePool.release(this.colorsTexture), this.boneTexture && this._texturePool.release(this.boneTexture), this.uniformsTexture && this._texturePool.release(this.uniformsTexture)) : (this.matricesTexture.dispose(), this.colorsTexture?.dispose(), this.boneTexture?.dispose(), this.uniformsTexture?.dispose()), this.morphTexture?.dispose();
   }
   updateMatrixWorld(t) {
-    super.updateMatrixWorld(t), this.bindMatrixInverse && (this.bindMode === It ? this.bindMatrixInverse.copy(this.matrixWorld).invert() : this.bindMode === ce ? this.bindMatrixInverse.copy(this.bindMatrix).invert() : console.warn("Unrecognized bindMode: " + this.bindMode));
+    super.updateMatrixWorld(t), this.bindMatrixInverse && (this.bindMode === It ? this.bindMatrixInverse.copy(this.matrixWorld).invert() : this.bindMode === he ? this.bindMatrixInverse.copy(this.bindMatrix).invert() : console.warn("Unrecognized bindMode: " + this.bindMode));
   }
 };
 ct._splitResult = [0, 0];
 let d = ct;
-const we = 1e3, Dt = new yt(), pt = new ht(), Ie = new j(), Bt = new ae(), mt = new y();
+const we = 1e3, Bt = new yt(), pt = new ht(), Ie = new j(), Nt = new ce(), mt = new y();
 d.prototype.resizeBuffers = function(r) {
   const t = this._capacity;
   this._capacity = r;
@@ -1183,19 +1183,19 @@ function Ge(r) {
     t.reversed = !!r.material?.transparent, r._capacity > t.aux.length && (t.aux.length = r._capacity);
     let n = 1 / 0, i = -1 / 0;
     const o = s.length;
-    for (let h = 0; h < o; h++) {
-      const l = s[h].depth;
+    for (let c = 0; c < o; c++) {
+      const l = s[c].depth;
       l > i && (i = l), l < n && (n = l);
     }
-    const a = i - n, c = (2 ** 32 - 1) / a;
-    for (let h = 0; h < o; h++) {
-      const l = s[h];
-      l.depthSort = (l.depth - n) * c;
+    const a = i - n, h = (2 ** 32 - 1) / a;
+    for (let c = 0; c < o; c++) {
+      const l = s[c];
+      l.depthSort = (l.depth - n) * h;
     }
-    me(s, t);
+    _e(s, t);
   };
 }
-function Vt(r, t) {
+function Wt(r, t) {
   return r.depth - t.depth;
 }
 function qt(r, t) {
@@ -1223,7 +1223,7 @@ class Ce {
     this.array.length = 0;
   }
 }
-const Wt = {
+const Kt = {
   array: null,
   instancesArrayCount: 0,
   sortObjects: !1,
@@ -1233,16 +1233,16 @@ const Wt = {
   mesh: null
 };
 function Oe(r) {
-  const t = Wt, e = r.object;
+  const t = Kt, e = r.object;
   if (e < t.instancesArrayCount && t.mesh.getVisibilityAt(e) && (!t.onFrustumEnter || t.onFrustumEnter(e, t.camera)))
     if (t.sortObjects) {
-      t.mesh.getPositionAt(e, L), t.mesh._hasSectors && (t.mesh.getSectorOffsetFor(e, M), L.add(M));
-      const s = L.sub(R).dot(dt);
+      t.mesh.getPositionAt(e, M), t.mesh._hasSectors && (t.mesh.getSectorOffsetFor(e, U), M.add(U));
+      const s = M.sub(R).dot(dt);
       O.push(s, e);
     } else
       t.array[t.count++] = e;
 }
-const Kt = {
+const Ht = {
   instancesArrayCount: 0,
   onFrustumEnter: null,
   camera: null,
@@ -1250,14 +1250,14 @@ const Kt = {
   mesh: null
 };
 function Le(r) {
-  const t = Kt, e = r.object;
+  const t = Ht, e = r.object;
   if (e < t.instancesArrayCount && t.mesh.getVisibilityAt(e) && (!t.onFrustumEnter || t.onFrustumEnter(e, t.camera, t.cameraLOD))) {
-    t.mesh.getPositionAt(e, L), t.mesh._hasSectors && (t.mesh.getSectorOffsetFor(e, M), L.add(M));
-    const s = L.distanceToSquared(B);
+    t.mesh.getPositionAt(e, M), t.mesh._hasSectors && (t.mesh.getSectorOffsetFor(e, U), M.add(U));
+    const s = M.distanceToSquared(N);
     O.push(s, e);
   }
 }
-const Ht = {
+const Xt = {
   instancesArrayCount: 0,
   onFrustumEnter: null,
   camera: null,
@@ -1268,39 +1268,39 @@ const Ht = {
   levels: null
 };
 function Me(r, t) {
-  const e = Ht, s = r.object;
+  const e = Xt, s = r.object;
   if (s < e.instancesArrayCount && e.mesh.getVisibilityAt(s)) {
     if (t === null) {
-      e.mesh.getPositionAt(s, L), e.mesh._hasSectors && (e.mesh.getSectorOffsetFor(s, M), L.add(M));
-      const n = L.distanceToSquared(B);
+      e.mesh.getPositionAt(s, M), e.mesh._hasSectors && (e.mesh.getSectorOffsetFor(s, U), M.add(U));
+      const n = M.distanceToSquared(N);
       t = e.mesh.getObjectLODIndexForDistance(e.levels, n);
     }
     (!e.onFrustumEnter || e.onFrustumEnter(s, e.camera, e.cameraLOD, t)) && (e.indexes[t][e.count[t]++] = s);
   }
 }
-const rt = new he(), O = new Ce(), N = new j(), q = new j(), dt = new y(), R = new y(), B = new y(), L = new y(), S = new ht(), C = new lt(), M = new y(), ot = new j(), v = 128, _t = [];
+const rt = new le(), O = new Ce(), L = new j(), W = new j(), dt = new y(), R = new y(), N = new y(), M = new y(), S = new ht(), C = new lt(), U = new y(), ot = new j(), v = 128, _t = [];
 d.prototype.getSectorAwarePosition = function(r, t) {
   if (this.getPositionAt(r, t), !this._hasSectors || !this._globalTrackedSectorLow || !this._globalTrackedSectorHigh)
     return t;
   this.getSectorAt(r, C);
-  const e = Number(C.x & 0xffffffffn) - this._globalTrackedSectorLow.x, s = Number(C.y & 0xffffffffn) - this._globalTrackedSectorLow.y, n = Number(C.z & 0xffffffffn) - this._globalTrackedSectorLow.z, i = Number(C.x >> 32n) - this._globalTrackedSectorHigh.x, o = Number(C.y >> 32n) - this._globalTrackedSectorHigh.y, a = Number(C.z >> 32n) - this._globalTrackedSectorHigh.z, c = (e + i * 4294967296) * v, h = (s + o * 4294967296) * v, l = (n + a * 4294967296) * v, f = this._globalWorldOffset ?? { x: 0, y: 0, z: 0 };
-  return t.x += c - f.x, t.y += h - f.y, t.z += l - f.z, t;
+  const e = Number(C.x & 0xffffffffn) - this._globalTrackedSectorLow.x, s = Number(C.y & 0xffffffffn) - this._globalTrackedSectorLow.y, n = Number(C.z & 0xffffffffn) - this._globalTrackedSectorLow.z, i = Number(C.x >> 32n) - this._globalTrackedSectorHigh.x, o = Number(C.y >> 32n) - this._globalTrackedSectorHigh.y, a = Number(C.z >> 32n) - this._globalTrackedSectorHigh.z, h = (e + i * 4294967296) * v, c = (s + o * 4294967296) * v, l = (n + a * 4294967296) * v, f = this._globalWorldOffset ?? { x: 0, y: 0, z: 0 };
+  return t.x += h - f.x, t.y += c - f.y, t.z += l - f.z, t;
 };
 d.prototype.getSectorOffsetFor = function(r, t) {
   if (t.set(0, 0, 0), !this._hasSectors || !this._globalTrackedSectorLow) return t;
   this.getSectorAt(r, C);
-  const e = this._globalTrackedSectorLow, s = Number(C.x & 0xffffffffn), n = Number(C.y & 0xffffffffn), i = Number(C.z & 0xffffffffn), o = s - e.x | 0, a = n - e.y | 0, c = i - e.z | 0, h = this._globalWorldOffset;
-  return t.x = o * v - (h?.x ?? 0), t.y = a * v - (h?.y ?? 0), t.z = c * v - (h?.z ?? 0), t;
+  const e = this._globalTrackedSectorLow, s = Number(C.x & 0xffffffffn), n = Number(C.y & 0xffffffffn), i = Number(C.z & 0xffffffffn), o = s - e.x | 0, a = n - e.y | 0, h = i - e.z | 0, c = this._globalWorldOffset;
+  return t.x = o * v - (c?.x ?? 0), t.y = a * v - (c?.y ?? 0), t.z = h * v - (c?.z ?? 0), t;
 };
-d.prototype.performFrustumCulling = function(r, t = r) {
-  const e = this._parentLOD ?? this, s = e.LODinfo;
-  let n;
-  if (s) {
-    n = r !== t ? s.shadowRender ?? s.render : s.render;
-    for (const o of s.objects)
-      o.count = 0;
-  } else (e._perObjectFrustumCulled || e._sortObjects) && (e.count = 0);
-  e._instancesArrayCount !== 0 && (n?.levels.length > 0 ? e.frustumCullingLOD(n, r, t) : e.frustumCulling(r));
+d.prototype.performFrustumCulling = function(r, t = r, e) {
+  const s = this._parentLOD ?? this, n = s.LODinfo;
+  let i;
+  if (n) {
+    i = r !== t ? n.shadowRender ?? n.render : n.render;
+    for (const a of n.objects)
+      a.count = 0;
+  } else (s._perObjectFrustumCulled || s._sortObjects) && (s.count = 0);
+  s._instancesArrayCount !== 0 && (i?.levels.length > 0 ? s.frustumCullingLOD(i, r, t, e) : s.frustumCulling(r, e));
 };
 d.prototype.updateLastRenderInfo = function(r, t, e) {
   const s = this._lastRenderInfo;
@@ -1310,33 +1310,33 @@ d.prototype.frustumCullingAlreadyPerformed = function(r, t, e) {
   const s = this._lastRenderInfo;
   return s.frame === r && s.camera === t && s.shadowCamera === e ? !0 : (this.updateLastRenderInfo(r, t, e), !1);
 };
-d.prototype.frustumCulling = function(r) {
-  const t = this._sortObjects, e = this._perObjectFrustumCulled, s = this.instanceIndex.array;
-  if (this.instanceIndex._needsUpdate = !0, !e && !t) {
+d.prototype.frustumCulling = function(r, t) {
+  const e = this._sortObjects, s = this._perObjectFrustumCulled, n = this.instanceIndex.array;
+  if (this.instanceIndex._needsUpdate = !0, !s && !e) {
     this.updateIndexArray();
     return;
   }
-  if (t && (q.copy(this.matrixWorld).invert(), R.setFromMatrixPosition(r.matrixWorld).applyMatrix4(q), dt.set(0, 0, -1).transformDirection(r.matrixWorld).transformDirection(q)), !e)
+  if (e && (W.copy(this.matrixWorld).invert(), R.setFromMatrixPosition(r.matrixWorld).applyMatrix4(W), dt.set(0, 0, -1).transformDirection(r.matrixWorld).transformDirection(W)), !s)
     this.updateRenderList();
-  else if (N.multiplyMatrices(r.projectionMatrix, r.matrixWorldInverse).multiply(this.matrixWorld), this.bvh) {
+  else if (t ? L.multiplyMatrices(t, this.matrixWorld) : L.multiplyMatrices(r.projectionMatrix, r.matrixWorldInverse).multiply(this.matrixWorld), this.bvh) {
     if (this._hasSectors && this._globalTrackedSectorLow) {
-      const n = this._globalTrackedSectorLow, i = this._globalWorldOffset;
+      const i = this._globalTrackedSectorLow, o = this._globalWorldOffset;
       ot.makeTranslation(
-        -(n.x | 0) * v - (i?.x ?? 0),
-        -(n.y | 0) * v - (i?.y ?? 0),
-        -(n.z | 0) * v - (i?.z ?? 0)
-      ), N.multiply(ot);
+        -(i.x | 0) * v - (o?.x ?? 0),
+        -(i.y | 0) * v - (o?.y ?? 0),
+        -(i.z | 0) * v - (o?.z ?? 0)
+      ), L.multiply(ot);
     }
     this.BVHCulling(r);
   } else
     this.linearCulling(r);
-  if (t) {
-    const n = this.customSort;
-    n === null ? O.array.sort(this.material?.transparent ? qt : Vt) : n(O.array);
-    const i = O.array, o = i.length;
-    for (let a = 0; a < o; a++)
-      s[a] = i[a].index;
-    this.count = o, O.reset();
+  if (e) {
+    const i = this.customSort;
+    i === null ? O.array.sort(this.material?.transparent ? qt : Wt) : i(O.array);
+    const o = O.array, a = o.length;
+    for (let h = 0; h < a; h++)
+      n[h] = o[h].index;
+    this.count = a, O.reset();
   }
 };
 d.prototype.updateIndexArray = function() {
@@ -1356,15 +1356,15 @@ d.prototype.updateRenderList = function() {
     }
 };
 d.prototype.BVHCulling = function(r) {
-  const t = Wt;
-  t.array = this.instanceIndex.array, t.instancesArrayCount = this._instancesArrayCount, t.sortObjects = this._sortObjects, t.onFrustumEnter = this.onFrustumEnter, t.camera = r, t.count = 0, t.mesh = this, this.bvh.frustumCulling(N, Oe), this.count = t.count, t.mesh = null;
+  const t = Kt;
+  t.array = this.instanceIndex.array, t.instancesArrayCount = this._instancesArrayCount, t.sortObjects = this._sortObjects, t.onFrustumEnter = this.onFrustumEnter, t.camera = r, t.count = 0, t.mesh = this, this.bvh.frustumCulling(L, Oe), this.count = t.count, t.mesh = null;
 };
 d.prototype.linearCulling = function(r) {
   const t = this.instanceIndex.array;
   this.geometry.boundingSphere || this.geometry.computeBoundingSphere();
-  const e = this._geometry.boundingSphere, s = e.radius, n = e.center, i = this._instancesArrayCount, o = n.x === 0 && n.y === 0 && n.z === 0, a = this._sortObjects, c = this.onFrustumEnter;
-  let h = 0;
-  rt.setFromProjectionMatrix(N);
+  const e = this._geometry.boundingSphere, s = e.radius, n = e.center, i = this._instancesArrayCount, o = n.x === 0 && n.y === 0 && n.z === 0, a = this._sortObjects, h = this.onFrustumEnter;
+  let c = 0;
+  rt.setFromProjectionMatrix(L);
   for (let l = 0; l < i; l++)
     if (this.getActiveAndVisibilityAt(l)) {
       if (o) {
@@ -1372,79 +1372,79 @@ d.prototype.linearCulling = function(r) {
         S.radius = s * f;
       } else
         this.applyMatrixAtToSphere(l, S, n, s);
-      if (this._hasSectors && (this.getSectorOffsetFor(l, M), S.center.add(M)), rt.intersectsSphere(S) && (!c || c(l, r)))
+      if (this._hasSectors && (this.getSectorOffsetFor(l, U), S.center.add(U)), rt.intersectsSphere(S) && (!h || h(l, r)))
         if (a) {
-          const f = L.subVectors(S.center, R).dot(dt);
+          const f = M.subVectors(S.center, R).dot(dt);
           O.push(f, l);
         } else
-          t[h++] = l;
+          t[c++] = l;
     }
-  this.count = h;
+  this.count = c;
 };
-d.prototype.frustumCullingLOD = function(r, t, e) {
-  const { count: s, levels: n } = r;
-  for (let c = 0; c < n.length; c++) {
-    if (!n[c].object.instanceIndex) return;
-    s[c] = 0, n[c].object.instanceIndex._needsUpdate = !0;
+d.prototype.frustumCullingLOD = function(r, t, e, s) {
+  const { count: n, levels: i } = r;
+  for (let c = 0; c < i.length; c++) {
+    if (!i[c].object.instanceIndex) return;
+    n[c] = 0, i[c].object.instanceIndex._needsUpdate = !0;
   }
-  const o = !(t !== e) && this._sortObjects;
-  N.multiplyMatrices(t.projectionMatrix, t.matrixWorldInverse).multiply(this.matrixWorld), q.copy(this.matrixWorld).invert(), R.setFromMatrixPosition(t.matrixWorld).applyMatrix4(q), B.setFromMatrixPosition(e.matrixWorld).applyMatrix4(q), _t.length = n.length;
-  for (let c = 0; c < n.length; c++)
-    _t[c] = n[c].object.instanceIndex.array;
-  const a = _t;
+  const a = !(t !== e) && this._sortObjects;
+  s ? L.multiplyMatrices(s, this.matrixWorld) : L.multiplyMatrices(t.projectionMatrix, t.matrixWorldInverse).multiply(this.matrixWorld), W.copy(this.matrixWorld).invert(), R.setFromMatrixPosition(t.matrixWorld).applyMatrix4(W), N.setFromMatrixPosition(e.matrixWorld).applyMatrix4(W), _t.length = i.length;
+  for (let c = 0; c < i.length; c++)
+    _t[c] = i[c].object.instanceIndex.array;
+  const h = _t;
   if (this.bvh) {
     if (this._hasSectors && this._globalTrackedSectorLow) {
-      const c = this._globalTrackedSectorLow, h = this._globalWorldOffset, l = -(c.x | 0) * v - (h?.x ?? 0), f = -(c.y | 0) * v - (h?.y ?? 0), p = -(c.z | 0) * v - (h?.z ?? 0);
-      ot.makeTranslation(l, f, p), N.multiply(ot), R.x -= l, R.y -= f, R.z -= p, B.x -= l, B.y -= f, B.z -= p;
+      const c = this._globalTrackedSectorLow, l = this._globalWorldOffset, f = -(c.x | 0) * v - (l?.x ?? 0), p = -(c.y | 0) * v - (l?.y ?? 0), u = -(c.z | 0) * v - (l?.z ?? 0);
+      ot.makeTranslation(f, p, u), L.multiply(ot), R.x -= f, R.y -= p, R.z -= u, N.x -= f, N.y -= p, N.z -= u;
     }
-    this.BVHCullingLOD(r, a, o, t, e);
+    this.BVHCullingLOD(r, h, a, t, e);
   } else
-    this.linearCullingLOD(r, a, o, t, e);
-  if (o) {
-    const c = this.customSort, h = O.array;
-    let l = 0, f = n[1].distance;
-    c === null ? h.sort(n[0].object.material?.transparent ? qt : Vt) : c(h);
-    for (let p = 0, u = h.length; p < u; p++) {
-      const m = h[p];
-      m.depth > f && (l++, f = n[l + 1]?.distance ?? 1 / 0), a[l][s[l]++] = m.index;
+    this.linearCullingLOD(r, h, a, t, e);
+  if (a) {
+    const c = this.customSort, l = O.array;
+    let f = 0, p = i[1].distance;
+    c === null ? l.sort(i[0].object.material?.transparent ? qt : Wt) : c(l);
+    for (let u = 0, m = l.length; u < m; u++) {
+      const _ = l[u];
+      _.depth > p && (f++, p = i[f + 1]?.distance ?? 1 / 0), h[f][n[f]++] = _.index;
     }
     O.reset();
   }
-  for (let c = 0; c < n.length; c++) {
-    const h = n[c].object;
-    h.count = s[c];
+  for (let c = 0; c < i.length; c++) {
+    const l = i[c].object;
+    l.count = n[c];
   }
 };
 d.prototype.BVHCullingLOD = function(r, t, e, s, n) {
   const { count: i, levels: o } = r;
   if (e) {
-    const a = Kt;
-    a.instancesArrayCount = this._instancesArrayCount, a.onFrustumEnter = this.onFrustumEnter, a.camera = s, a.cameraLOD = n, a.mesh = this, this.bvh.frustumCulling(N, Le), a.mesh = null;
-  } else {
     const a = Ht;
-    a.instancesArrayCount = this._instancesArrayCount, a.onFrustumEnter = this.onFrustumEnter, a.camera = s, a.cameraLOD = n, a.mesh = this, a.indexes = t, a.count = i, a.levels = o, this.bvh.frustumCullingLOD(N, B, o, Me), a.mesh = null, a.indexes = null, a.count = null, a.levels = null;
+    a.instancesArrayCount = this._instancesArrayCount, a.onFrustumEnter = this.onFrustumEnter, a.camera = s, a.cameraLOD = n, a.mesh = this, this.bvh.frustumCulling(L, Le), a.mesh = null;
+  } else {
+    const a = Xt;
+    a.instancesArrayCount = this._instancesArrayCount, a.onFrustumEnter = this.onFrustumEnter, a.camera = s, a.cameraLOD = n, a.mesh = this, a.indexes = t, a.count = i, a.levels = o, this.bvh.frustumCullingLOD(L, N, o, Me), a.mesh = null, a.indexes = null, a.count = null, a.levels = null;
   }
 };
 d.prototype.linearCullingLOD = function(r, t, e, s, n) {
   const { count: i, levels: o } = r;
   this.geometry.boundingSphere || this.geometry.computeBoundingSphere();
-  const a = this._geometry.boundingSphere, c = a.radius, h = a.center, l = this._instancesArrayCount, f = h.x === 0 && h.y === 0 && h.z === 0, p = this.onFrustumEnter;
-  rt.setFromProjectionMatrix(N);
+  const a = this._geometry.boundingSphere, h = a.radius, c = a.center, l = this._instancesArrayCount, f = c.x === 0 && c.y === 0 && c.z === 0, p = this.onFrustumEnter;
+  rt.setFromProjectionMatrix(L);
   for (let u = 0; u < l; u++)
     if (this.getActiveAndVisibilityAt(u)) {
       if (f) {
         const m = this.getPositionAndMaxScaleOnAxisAt(u, S.center);
-        S.radius = c * m;
+        S.radius = h * m;
       } else
-        this.applyMatrixAtToSphere(u, S, h, c);
-      if (this._hasSectors && (this.getSectorOffsetFor(u, M), S.center.add(M)), rt.intersectsSphere(S))
+        this.applyMatrixAtToSphere(u, S, c, h);
+      if (this._hasSectors && (this.getSectorOffsetFor(u, U), S.center.add(U)), rt.intersectsSphere(S))
         if (e) {
           if (!p || p(u, s, n)) {
-            const m = S.center.distanceToSquared(B);
+            const m = S.center.distanceToSquared(N);
             O.push(m, u);
           }
         } else {
-          const m = S.center.distanceToSquared(B), _ = this.getObjectLODIndexForDistance(o, m);
+          const m = S.center.distanceToSquared(N), _ = this.getObjectLODIndexForDistance(o, m);
           (!p || p(u, s, n, _)) && (t[_][i[_]++] = u);
         }
     }
@@ -1488,7 +1488,7 @@ d.prototype.createEntities = function(r) {
     return this;
   const e = this.instances;
   for (let s = r; s < t; s++)
-    e[s] || (e[s] = new $t(this, s, this._allowsEuler));
+    e[s] || (e[s] = new Gt(this, s, this._allowsEuler));
   return this;
 };
 d.prototype.addInstances = function(r, t) {
@@ -1497,9 +1497,9 @@ d.prototype.addInstances = function(r, t) {
   if (e.length > 0) {
     let i = -1;
     const o = Math.min(e.length, r), a = e.length - o;
-    for (let c = e.length - 1; c >= a; c--) {
-      const h = e[c];
-      h > i && (i = h), this.addInstance(h, t);
+    for (let h = e.length - 1; h >= a; h--) {
+      const c = e[h];
+      c > i && (i = c), this.addInstance(c, t);
     }
     e.length -= o, r -= o, this._instancesArrayCount = Math.max(i + 1, this._instancesArrayCount);
   }
@@ -1560,17 +1560,17 @@ d.prototype.addShadowLOD = function(r, t = 0, e = 0) {
 };
 d.prototype.addLevel = function(r, t, e, s, n) {
   const i = this.LODinfo.objects, o = r.levels;
-  let a, c;
+  let a, h;
   s = s ** 2;
-  const h = i.findIndex((l) => l.geometry === t);
-  if (h === -1) {
+  const c = i.findIndex((l) => l.geometry === t);
+  if (c === -1) {
     const l = { capacity: this._capacity, renderer: this._renderer };
-    c = new d(t, e ?? new le(), l, this), c.frustumCulled = !1, this.patchLevel(c), i.push(c), this.add(c);
+    h = new d(t, e ?? new ue(), l, this), h.frustumCulled = !1, this.patchLevel(h), i.push(h), this.add(h);
   } else
-    c = i[h], e && (c.material = e);
+    h = i[c], e && (h.material = e);
   for (a = 0; a < o.length && !(s < o[a].distance); a++)
     ;
-  return o.splice(a, 0, { distance: s, hysteresis: n, object: c }), r.count.push(0), c;
+  return o.splice(a, 0, { distance: s, hysteresis: n, object: h }), r.count.push(0), h;
 };
 d.prototype.updateLevel = function(r, t, e, s) {
   if (!r) throw new Error("Render list is invalid.");
@@ -1596,14 +1596,14 @@ d.prototype.updateAllLevels = function(r, t, e) {
   n && (s[0].distance = 0);
   const o = t?.length > 0;
   let a = [];
-  o && (a = n && t[0] === 0 ? t.slice(1, Math.min(s.length, t.length)) : t.slice(0, Math.min(s.length - i, t.length)), a.every((h, l) => {
-    if (l > 0 && h <= a[l - 1]) throw new Error(`LOD distances must be strictly increasing: d[${l - 1}]=${a[l - 1]} < d[${l}]=${h}`);
+  o && (a = n && t[0] === 0 ? t.slice(1, Math.min(s.length, t.length)) : t.slice(0, Math.min(s.length - i, t.length)), a.every((c, l) => {
+    if (l > 0 && c <= a[l - 1]) throw new Error(`LOD distances must be strictly increasing: d[${l - 1}]=${a[l - 1]} < d[${l}]=${c}`);
     return !0;
   }));
-  const c = o ? a.length : s.length - i;
-  for (let h = 0; h < c; h++) {
-    const l = o ? a[h] : void 0, f = Array.isArray(e) ? e[h] : e;
-    this.updateLevel(r, i + h, l, f);
+  const h = o ? a.length : s.length - i;
+  for (let c = 0; c < h; c++) {
+    const l = o ? a[c] : void 0, f = Array.isArray(e) ? e[c] : e;
+    this.updateLevel(r, i + c, l, f);
   }
   return this;
 };
@@ -1631,10 +1631,10 @@ d.prototype.removeLOD = function(r, t = !0) {
   if (a?.levels && r < a.levels.length && (a.levels.splice(r, 1), a.count?.splice?.(r, 1), a.levels.length === 0 && (this.LODinfo.shadowRender = null)), t && o !== this)
     try {
       this.remove(o);
-      const c = e.objects?.indexOf(o) ?? -1;
-      c !== -1 && e.objects.splice(c, 1), this.disposeLOD(o);
-    } catch (c) {
-      console.error(c);
+      const h = e.objects?.indexOf(o) ?? -1;
+      h !== -1 && e.objects.splice(h, 1), this.disposeLOD(o);
+    } catch (h) {
+      console.error(h);
     }
   return this;
 };
@@ -1694,31 +1694,31 @@ d.prototype.setMorphAt = function(r, t) {
   this.morphTexture === null && !this._parentLOD && (this.morphTexture = new bt(new Float32Array(s * this._capacity), s, this._capacity, Tt, At));
   const n = this.morphTexture.source.data.data;
   let i = 0;
-  for (const c of e)
-    i += c;
+  for (const h of e)
+    i += h;
   const o = this._geometry.morphTargetsRelative ? 1 : 1 - i, a = s * r;
   n[a] = o, n.set(e, a + 1), this.morphTexture.needsUpdate = !0;
 };
-const xt = [], k = new St(), Pe = new ue(), Nt = new y(), zt = new y(), Rt = new j(), at = new ht(), nt = new y(), kt = new y(), gt = 128;
+const xt = [], k = new St(), Pe = new fe(), zt = new y(), Rt = new y(), kt = new j(), at = new ht(), nt = new y(), jt = new y(), gt = 128;
 d.prototype.raycast = function(r, t) {
   if (this._parentLOD || !this.material || this._instancesArrayCount === 0 || !this.instanceIndex || !this._hasSectors && (this.boundingSphere === null && this.computeBoundingSphere(), at.copy(this.boundingSphere).applyMatrix4(this.matrixWorld), !r.ray.intersectsSphere(at)))
     return;
   k.geometry = this._geometry, k.material = this.material;
   const e = r.ray, s = r.near, n = r.far;
-  Rt.copy(this.matrixWorld).invert(), zt.setFromMatrixScale(this.matrixWorld), Nt.copy(r.ray.direction).multiply(zt);
-  const i = Nt.length();
-  r.ray = Pe.copy(r.ray).applyMatrix4(Rt), r.near /= i, r.far /= i, this.raycastInstances(r, t), r.ray = e, r.near = s, r.far = n;
+  kt.copy(this.matrixWorld).invert(), Rt.setFromMatrixScale(this.matrixWorld), zt.copy(r.ray.direction).multiply(Rt);
+  const i = zt.length();
+  r.ray = Pe.copy(r.ray).applyMatrix4(kt), r.near /= i, r.far /= i, this.raycastInstances(r, t), r.ray = e, r.near = s, r.far = n;
 };
 d.prototype.raycastInstances = function(r, t) {
   if (this.bvh) {
     let e;
     if (this._hasSectors && this._globalTrackedSectorLow) {
       const s = this._globalTrackedSectorLow, n = this._globalWorldOffset;
-      kt.set(
+      jt.set(
         (s.x | 0) * gt + (n?.x ?? 0),
         (s.y | 0) * gt + (n?.y ?? 0),
         (s.z | 0) * gt + (n?.z ?? 0)
-      ), e = kt;
+      ), e = jt;
     }
     this.bvh.raycast(r, (s) => this.checkObjectIntersection(r, s, t), e);
   } else {
@@ -1739,7 +1739,7 @@ d.prototype.checkObjectIntersection = function(r, t, e) {
 d.prototype.initSkeleton = function(r, t = !0) {
   if (r && this.skeleton !== r && !this._parentLOD) {
     const e = r.bones;
-    if (this.skeleton = r, this.bindMatrix = new j(), this.bindMatrixInverse = new j(), this.boneTexture = this._texturePool ? this._texturePool.acquire(Float32Array, 4, 4 * e.length, this._capacity) : new W(Float32Array, 4, 4 * e.length, this._capacity), this.updatePropertiesKey(), t)
+    if (this.skeleton = r, this.bindMatrix = new j(), this.bindMatrixInverse = new j(), this.boneTexture = this._texturePool ? this._texturePool.acquire(Float32Array, 4, 4 * e.length, this._capacity) : new q(Float32Array, 4, 4 * e.length, this._capacity), this.updatePropertiesKey(), t)
       for (const s of e)
         s.matrixAutoUpdate = !1, s.matrixWorldAutoUpdate = !1;
     this.materialsNeedsUpdate();
@@ -1751,14 +1751,14 @@ d.prototype.setBonesAt = function(r, t = !0, e) {
     throw new Error('"setBonesAt" cannot be called before "initSkeleton"');
   const n = s.bones, i = s.boneInverses;
   for (let o = 0, a = n.length; o < a; o++) {
-    const c = n[o];
-    t && (e?.has(c.name) || c.updateMatrix(), c.matrixWorld.multiplyMatrices(c.parent.matrixWorld, c.matrix)), this.multiplyBoneMatricesAt(r, o, c.matrixWorld, i[o]);
+    const h = n[o];
+    t && (e?.has(h.name) || h.updateMatrix(), h.matrixWorld.multiplyMatrices(h.parent.matrixWorld, h.matrix)), this.multiplyBoneMatricesAt(r, o, h.matrixWorld, i[o]);
   }
   this.boneTexture.enqueueUpdate(r);
 };
 d.prototype.multiplyBoneMatricesAt = function(r, t, e, s) {
-  const n = (r * this.skeleton.bones.length + t) * 16, i = e.elements, o = s.elements, a = this.boneTexture._data, c = i[0], h = i[4], l = i[8], f = i[12], p = i[1], u = i[5], m = i[9], _ = i[13], g = i[2], w = i[6], U = i[10], P = i[14], E = i[3], F = i[7], D = i[11], I = i[15], b = o[0], A = o[4], T = o[8], z = o[12], $ = o[1], G = o[5], V = o[9], K = o[13], H = o[2], X = o[6], Y = o[10], Z = o[14], Q = o[3], J = o[7], tt = o[11], et = o[15];
-  a[n + 0] = c * b + h * $ + l * H + f * Q, a[n + 4] = c * A + h * G + l * X + f * J, a[n + 8] = c * T + h * V + l * Y + f * tt, a[n + 12] = c * z + h * K + l * Z + f * et, a[n + 1] = p * b + u * $ + m * H + _ * Q, a[n + 5] = p * A + u * G + m * X + _ * J, a[n + 9] = p * T + u * V + m * Y + _ * tt, a[n + 13] = p * z + u * K + m * Z + _ * et, a[n + 2] = g * b + w * $ + U * H + P * Q, a[n + 6] = g * A + w * G + U * X + P * J, a[n + 10] = g * T + w * V + U * Y + P * tt, a[n + 14] = g * z + w * K + U * Z + P * et, a[n + 3] = E * b + F * $ + D * H + I * Q, a[n + 7] = E * A + F * G + D * X + I * J, a[n + 11] = E * T + F * V + D * Y + I * tt, a[n + 15] = E * z + F * K + D * Z + I * et;
+  const n = (r * this.skeleton.bones.length + t) * 16, i = e.elements, o = s.elements, a = this.boneTexture._data, h = i[0], c = i[4], l = i[8], f = i[12], p = i[1], u = i[5], m = i[9], _ = i[13], g = i[2], w = i[6], P = i[10], E = i[14], F = i[3], D = i[7], B = i[11], I = i[15], b = o[0], A = o[4], T = o[8], z = o[12], $ = o[1], G = o[5], V = o[9], K = o[13], H = o[2], X = o[6], Y = o[10], Z = o[14], Q = o[3], J = o[7], tt = o[11], et = o[15];
+  a[n + 0] = h * b + c * $ + l * H + f * Q, a[n + 4] = h * A + c * G + l * X + f * J, a[n + 8] = h * T + c * V + l * Y + f * tt, a[n + 12] = h * z + c * K + l * Z + f * et, a[n + 1] = p * b + u * $ + m * H + _ * Q, a[n + 5] = p * A + u * G + m * X + _ * J, a[n + 9] = p * T + u * V + m * Y + _ * tt, a[n + 13] = p * z + u * K + m * Z + _ * et, a[n + 2] = g * b + w * $ + P * H + E * Q, a[n + 6] = g * A + w * G + P * X + E * J, a[n + 10] = g * T + w * V + P * Y + E * tt, a[n + 14] = g * z + w * K + P * Z + E * et, a[n + 3] = F * b + D * $ + B * H + I * Q, a[n + 7] = F * A + D * G + B * X + I * J, a[n + 11] = F * T + D * V + B * Y + I * tt, a[n + 15] = F * z + D * K + B * Z + I * et;
 };
 d.prototype.getUniformAt = function(r, t, e) {
   if (!this.uniformsTexture)
@@ -1773,7 +1773,7 @@ d.prototype.setUniformAt = function(r, t, e) {
 d.prototype.initUniformsPerInstance = function(r) {
   if (!this._parentLOD) {
     const { channels: t, pixelsPerInstance: e, uniformMap: s, fetchInFragmentShader: n } = this.getUniformSchemaResult(r);
-    this.uniformsTexture = this._texturePool ? this._texturePool.acquire(Float32Array, t, e, this._capacity, s, n) : new W(Float32Array, t, e, this._capacity, s, n), this.materialsNeedsUpdate(), this.updatePropertiesKey();
+    this.uniformsTexture = this._texturePool ? this._texturePool.acquire(Float32Array, t, e, this._capacity, s, n) : new q(Float32Array, t, e, this._capacity, s, n), this.materialsNeedsUpdate(), this.updatePropertiesKey();
   }
 };
 d.prototype.getUniformSchemaResult = function(r) {
@@ -1795,8 +1795,8 @@ d.prototype.getUniformSchemaResult = function(r) {
     const u = this.getUniformOffset(f, a);
     e.set(l, { offset: u, size: f, type: p });
   }
-  const c = Math.ceil(t / 4);
-  return { channels: Math.min(t, 4), pixelsPerInstance: c, uniformMap: e, fetchInFragmentShader: o };
+  const h = Math.ceil(t / 4);
+  return { channels: Math.min(t, 4), pixelsPerInstance: h, uniformMap: e, fetchInFragmentShader: o };
 };
 d.prototype.getUniformOffset = function(r, t) {
   if (r < 4) {
@@ -1829,7 +1829,7 @@ d.prototype.getUniformSize = function(r) {
       throw new Error(`Invalid uniform type: ${r}`);
   }
 };
-class Xt {
+class Yt {
   constructor(t = 4, e = 32) {
     this._pool = /* @__PURE__ */ new Map(), this._totalPooled = 0, this.maxPerKey = t, this.maxTotal = e;
   }
@@ -1841,12 +1841,12 @@ class Xt {
    * The returned texture's data is zeroed.
    */
   acquire(t, e, s, n, i, o) {
-    const a = Xt._getKey(t, e, s, n), c = this._pool.get(a);
-    if (c && c.length > 0) {
-      const h = c.pop();
-      return this._totalPooled--, i !== void 0 && (h._uniformMap = i), o !== void 0 && (h._fetchUniformsInFragmentShader = o), h;
+    const a = Yt._getKey(t, e, s, n), h = this._pool.get(a);
+    if (h && h.length > 0) {
+      const c = h.pop();
+      return this._totalPooled--, i !== void 0 && (c._uniformMap = i), o !== void 0 && (c._fetchUniformsInFragmentShader = o), c;
     }
-    return new W(t, e, s, n, i, o);
+    return new q(t, e, s, n, i, o);
   }
   /**
    * Release a texture back into the pool. Its data is zeroed and update state reset.
@@ -1854,12 +1854,12 @@ class Xt {
    */
   release(t) {
     if (!t) return;
-    const e = t._channels, s = t._pixelsPerInstance, n = t._data, i = n.constructor.name, o = t.image.width, a = o * o, c = Math.floor(a / s), h = `${i}_${e}_${s}_${c}`, l = this._pool.get(h);
+    const e = t._channels, s = t._pixelsPerInstance, n = t._data, i = n.constructor.name, o = t.image.width, a = o * o, h = Math.floor(a / s), c = `${i}_${e}_${s}_${h}`, l = this._pool.get(c);
     if ((l ? l.length : 0) >= this.maxPerKey || this._totalPooled >= this.maxTotal) {
       t.dispose();
       return;
     }
-    n.fill(0), t._rowToUpdate.fill(!1), t._needsUpdate = !0, t.needsUpdate = !0, l ? l.push(t) : this._pool.set(h, [t]), this._totalPooled++;
+    n.fill(0), t._rowToUpdate.fill(!1), t._needsUpdate = !0, t.needsUpdate = !0, l ? l.push(t) : this._pool.set(c, [t]), this._totalPooled++;
   }
   /**
    * Dispose all pooled textures and clear the pool.
@@ -1995,14 +1995,14 @@ function Ve(r, t = {}) {
     const i = n.geometry.clone();
     i.deleteAttribute("instanceIndex"), l();
     const o = new d(i, n.material, t);
-    return o.position.copy(n.position), o.quaternion.copy(n.quaternion), o.scale.copy(n.scale), a(), c(), h(), o;
+    return o.position.copy(n.position), o.quaternion.copy(n.quaternion), o.scale.copy(n.scale), a(), h(), c(), o;
     function a() {
       o.setInstancesArrayCount(n.count), o._instancesCount = n.count, o.availabilityArray.fill(!0, 0, n.count * 2);
     }
-    function c() {
+    function h() {
       o.matricesTexture.image.data.set(n.instanceMatrix.array);
     }
-    function h() {
+    function c() {
       if (n.instanceColor) {
         o.initColorsTexture();
         const f = n.instanceColor.array, p = o.colorsTexture.image.data;
@@ -2018,21 +2018,21 @@ function Ve(r, t = {}) {
   }
 }
 export {
-  xe as GLInstancedBufferAttribute,
-  $t as InstancedEntity,
+  ge as GLInstancedBufferAttribute,
+  Gt as InstancedEntity,
   d as InstancedMesh2,
-  _e as InstancedMeshBVH,
+  xe as InstancedMeshBVH,
   Ce as InstancedRenderList,
   lt as Sector,
-  W as SquareDataTexture,
-  Xt as TexturePool,
+  q as SquareDataTexture,
+  Yt as TexturePool,
   Ve as createInstancedMesh2From,
   Ge as createRadixSort,
   Se as getSquareTextureInfo,
-  Gt as getSquareTextureSize,
+  Vt as getSquareTextureSize,
   Ae as patchProperties,
   vt as patchShader,
-  Vt as sortOpaque,
+  Wt as sortOpaque,
   qt as sortTransparent,
   Te as unpatchProperties
 };

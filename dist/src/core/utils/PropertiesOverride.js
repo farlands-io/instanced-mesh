@@ -27,7 +27,9 @@ function addPropertiesCreate(material) {
 }
 export function patchProperties(obj, renderer, material) {
     const properties = renderer.properties;
-    propertiesGetBase = properties.get;
+    if (properties.get !== propertiesGetCallback) {
+        propertiesGetBase = properties.get;
+    }
     // PATCHED: Use cached key to avoid string allocation every frame
     const key = obj._propertiesKey ?? `${!!obj.colorsTexture}_${obj._useOpacity}_${!!obj.boneTexture}_${!!obj.uniformsTexture}`;
     propertiesGetMap[key] ?? (propertiesGetMap[key] = new WeakMap());

@@ -67,9 +67,9 @@
     "vite-plugin-static-copy": "^3.1.4"
   },
   "peerDependencies": {
-    "three": ">=0.159.0"
+    "three": "https://github.com/farlands-io/three.js"
   },
   "dependencies": {
-    "bvh.js": "^0.0.13"
+    "bvh.js": "https://github.com/farlands-io/BVH.js"
   }
 }

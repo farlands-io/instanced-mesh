@@ -308,9 +308,13 @@ export class InstancedMesh2 extends Mesh {
         this.bindTextures(renderer, material);
     }
     onAfterShadow(renderer, scene, camera, shadowCamera, geometry, depthMaterial, group) {
+        if (this._instancesArrayCount === 0)
+            return;
         this.unpatchMaterial(renderer, depthMaterial);
     }
     onAfterRender(renderer, scene, camera, geometry, material, group) {
+        if (this._instancesArrayCount === 0)
+            return;
         this.unpatchMaterial(renderer, material);
         if (this.instanceIndex || (group && !this.isLastGroup(group.materialIndex)))
             return;
